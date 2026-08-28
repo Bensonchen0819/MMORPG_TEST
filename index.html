@@ -1,0 +1,3303 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Engineering English Lab</title>
+<style>
+:root{--bg:#f3f5f8;--card:#fff;--text:#172033;--muted:#667085;--line:#d8dee8;--accent:#3157d5;--soft:#eef2ff;--ok:#147a4b;--bad:#b42318}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,"Noto Sans TC","Microsoft JhengHei",sans-serif}
+button,select,input{font:inherit}
+header{background:#172033;color:#fff;padding:24px 18px}
+header .inner{max-width:1050px;margin:auto}
+h1{margin:0 0 6px;font-size:28px}
+header p{margin:0;color:#d9dfeb}
+main{max-width:1050px;margin:20px auto;padding:0 14px}
+.panel,.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:16px}
+.controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+button,select,input{border:1px solid var(--line);border-radius:10px;padding:10px 13px;background:#fff;color:var(--text)}
+button{cursor:pointer;font-weight:700;min-height:44px}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+button:hover{filter:brightness(.97)}
+select{min-height:44px}
+.small{font-size:13px;color:var(--muted);line-height:1.5}
+.progress-row{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:12px}
+.badge{background:var(--soft);padding:7px 10px;border-radius:999px;font-size:13px;font-weight:700}
+.visual{background:#f7f8fb;border:1px solid var(--line);border-radius:14px;padding:8px;margin-bottom:16px}
+#diagram{display:block;width:100%;height:auto;min-height:240px}
+.word{font-size:38px;font-weight:800;line-height:1.15;word-break:break-word}
+.meaning{font-size:22px;margin-top:7px;color:#475467}
+.phonetic{color:#667085;margin-top:7px}
+.explain{margin-top:14px;background:#f7f8fb;border-left:4px solid #172033;border-radius:8px;padding:12px 14px;line-height:1.65}
+.example{margin-top:12px;line-height:1.6}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:17px}
+.status{margin-top:13px;font-weight:700;min-height:24px}
+.status.ok{color:var(--ok)}.status.bad{color:var(--bad)}
+.quiz-area{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.quiz-box{border:1px solid var(--line);border-radius:12px;padding:14px}
+.quiz-box h3{margin:0 0 10px;font-size:16px}
+.answer-row{display:flex;gap:8px;flex-wrap:wrap}
+.answer-row input{flex:1;min-width:220px}
+.score{font-size:26px;font-weight:800}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:9px}
+.item{border:1px solid var(--line);border-radius:10px;padding:11px;background:#fff;cursor:pointer}
+.item:hover{background:#f7f8fb}
+.item b{display:block;overflow-wrap:anywhere}
+
+.practice-card{max-width:900px;margin-left:auto;margin-right:auto}
+.word-focus{text-align:center;padding:20px 12px 16px;background:linear-gradient(135deg,#f7faff,#fffaf2);border:1px solid #e1e7f0;border-radius:18px}
+.word-focus .label{font-size:13px;color:#667085;font-weight:700;margin-bottom:8px}
+.big-meaning{font-size:32px!important;font-weight:800;color:#15803d!important}
+.audio-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:16px}
+.audio-btn{border-radius:12px;padding:13px 10px;background:#fff;border:1px solid #cfd7e4;font-weight:800}
+.audio-btn.listen{background:#eef4ff;border-color:#a9c6ff;color:#174a9e}
+.pronunciation-box{margin-top:12px;padding:12px 14px;border-radius:12px;background:#f7f8fb;border:1px solid #e2e6ee;text-align:center;color:#667085}
+.pronunciation-box strong{color:#172033;margin-left:6px}
+.fill-box{margin-top:16px;padding:18px;border:2px solid #dbe3ee;border-radius:16px;background:#fff}
+.fill-box h3{margin:0 0 12px}
+.question-line{display:flex;gap:9px;align-items:center}
+.blank-prefix{font-weight:800;white-space:nowrap}
+.question-line input{flex:1;font-size:20px;min-height:50px}
+.hint{margin-top:9px;color:#667085;font-size:13px}
+.result-box{margin-top:16px;border-radius:16px;padding:16px;background:#f7fbf8;border:1px solid #b7dfc8}
+.result-box.hidden{display:none}
+.result-title{font-size:20px;font-weight:900;margin-bottom:12px}
+.result-title.ok{color:#147a4b}.result-title.bad{color:#b42318}
+.comparison{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.comparison>div{background:#fff;border-radius:12px;padding:12px;border:1px solid #e0e5ec}
+.comparison-label{display:block;font-size:12px;color:#667085;margin-bottom:6px}
+.comparison strong{display:block;font-size:17px;overflow-wrap:anywhere}
+.example-line{margin-top:12px;line-height:1.6}
+.score-panel{max-width:900px;margin-left:auto;margin-right:auto}
+.score-card{text-align:center;padding:12px}
+.score-label{color:#667085;font-size:13px;font-weight:700}
+.score-card .score{font-size:30px}
+@media(max-width:700px){.audio-row{grid-template-columns:1fr}.question-line{flex-direction:column;align-items:stretch}.question-line input{width:100%}.comparison{grid-template-columns:1fr}main{padding:0 10px}}
+</style>
+</head>
+<body>
+<header><div class="inner">
+<h1>Engineering English Lab</h1>
+<p>Mechanical Engineering × DFM × Thermal × IPCam / Optics｜聽力＋發音＋填空</p>
+</div></header>
+
+<main>
+<section class="panel">
+<div class="controls">
+<button id="startBtn" class="primary" type="button">▶ 開始完整題庫（含 IoT／IPCam 機構英文）</button>
+<button id="restartBtn" type="button">↻ 重新開始</button>
+<select id="categorySelect" aria-label="題庫分類">
+<option value="all">全部題庫</option>
+<option value="interview">面試高頻</option>
+<option value="manufacturing">製造／模具</option>
+<option value="thermal">熱／散熱</option>
+<option value="optics">光學／IPCam</option>
+</select>
+
+</div>
+<p class="small">每次開始練習時，完整題庫（含 IoT／IPCam 機構英文）會先隨機打亂一次；之後依照這次的隨機順序逐題練習。每題先聽英文，再填空；送出後顯示中英文對照並判斷正確與否。</p>
+</section>
+
+
+<section class="card practice-card">
+  <div class="progress-row">
+    <strong id="progress">題目 1 / 1</strong>
+    <span id="categoryBadge" class="badge">製造／模具</span>
+  </div>
+
+  <div class="word-focus">
+    <div class="label">本題中文</div>
+    <div id="meaning" class="meaning big-meaning">「拉釘」</div>
+    <div class="small">先不要看英文，先聽、再回想英文。</div>
+  </div>
+
+  <div class="audio-row">
+    <button id="listenBtn" class="audio-btn listen" type="button">🔊 聽力：播放英文</button>
+    <button id="pronounceBtn" class="audio-btn" type="button">🗣️ 發音：慢速播放</button>
+    <button id="speakBtn" class="audio-btn" type="button">🎤 我來說</button>
+  </div>
+
+  <div class="pronunciation-box">
+    <span>發音提示：</span>
+    <strong id="phonetic">完成作答後顯示</strong>
+  </div>
+
+  <div class="fill-box">
+    <h3>✏️ 英文填空測驗</h3>
+    <div class="question-line">
+      <span class="blank-prefix">英文：</span>
+      <input id="answerInput" type="text" placeholder="請輸入英文單字／片語" autocomplete="off" spellcheck="false">
+      <button id="checkBtn" class="primary" type="button">檢查答案</button>
+    </div>
+    <div class="hint">提示：先按「聽力」，再把你聽到的英文填入。</div>
+  </div>
+
+  <div id="resultBox" class="result-box hidden">
+    <div class="result-title" id="resultTitle">結果</div>
+    <div class="comparison">
+      <div>
+        <span class="comparison-label">你的答案</span>
+        <strong id="yourAnswer">—</strong>
+      </div>
+      <div>
+        <span class="comparison-label">正確英文</span>
+        <strong id="correctEnglish">—</strong>
+      </div>
+      <div>
+        <span class="comparison-label">中文意思</span>
+        <strong id="correctChinese">—</strong>
+      </div>
+    </div>
+    <div class="example-line" id="example">Example:</div>
+  </div>
+
+  <div class="actions">
+    <button id="answerBtn" type="button">👁 顯示答案</button>
+    <button id="nextBtn" class="primary" type="button">➡ 下一題</button>
+  </div>
+
+  <div id="status" class="status" aria-live="polite">先聽英文，再填空作答。</div>
+</section>
+
+<section class="panel score-panel">
+  <div class="score-card">
+    <div class="score-label">目前成績</div>
+    <div class="score"><span id="score">0</span> / <span id="total">1</span></div>
+  </div>
+</section>
+
+<section class="panel">
+<h2 style="margin-top:0">📚 題庫總覽</h2>
+<div id="wordList" class="list"></div>
+</section>
+</main>
+
+<script>
+"use strict";
+
+const WORDS = [
+  [
+    "rivet",
+    "拉釘",
+    "🔩",
+    "/ˈrɪvɪt/",
+    "The bracket is secured with rivets.",
+    "manufacturing"
+  ],
+  [
+    "countersunk hole",
+    "沉頭孔",
+    "◉",
+    "/ˈkaʊntərsʌŋk hoʊl/",
+    "The screw sits flush in the countersunk hole.",
+    "manufacturing"
+  ],
+  [
+    "bending",
+    "折彎",
+    "↪",
+    "/ˈbendɪŋ/",
+    "Bending accuracy is critical for sheet metal.",
+    "manufacturing"
+  ],
+  [
+    "blanking",
+    "下料",
+    "✂",
+    "/ˈblæŋkɪŋ/",
+    "Blanking is the first step of the stamping process.",
+    "manufacturing"
+  ],
+  [
+    "progressive die",
+    "連續模",
+    "🏭",
+    "/prəˈɡresɪv daɪ/",
+    "The part is made with a progressive die.",
+    "manufacturing"
+  ],
+  [
+    "electroplating",
+    "電鍍",
+    "⚙",
+    "/ɪˌlektroʊˈpleɪtɪŋ/",
+    "Electroplating improves corrosion resistance.",
+    "manufacturing"
+  ],
+  [
+    "anodizing",
+    "陽極處理",
+    "🧪",
+    "/ˈænədaɪzɪŋ/",
+    "Anodizing protects the aluminum surface.",
+    "manufacturing"
+  ],
+  [
+    "punching",
+    "沖孔",
+    "⭕",
+    "/ˈpʌntʃɪŋ/",
+    "Punching creates the required mounting holes.",
+    "manufacturing"
+  ],
+  [
+    "threading",
+    "抽牙／攻牙",
+    "🧵",
+    "/ˈθredɪŋ/",
+    "Threading is required for the screw connection.",
+    "manufacturing"
+  ],
+  [
+    "stretching",
+    "拉伸",
+    "↔",
+    "/ˈstretʃɪŋ/",
+    "The sheet is formed by stretching.",
+    "manufacturing"
+  ],
+  [
+    "burr",
+    "毛邊",
+    "⚠",
+    "/bɜːr/",
+    "We need to remove the burr after machining.",
+    "manufacturing"
+  ],
+  [
+    "indentation",
+    "壓痕",
+    "▾",
+    "/ˌɪndenˈteɪʃən/",
+    "There is an indentation on the surface.",
+    "manufacturing"
+  ],
+  [
+    "engraving",
+    "刻印",
+    "✒",
+    "/ɪnˈɡreɪvɪŋ/",
+    "The serial number is engraved on the housing.",
+    "manufacturing"
+  ],
+  [
+    "laser engraving",
+    "雷雕",
+    "▣",
+    "/ˈleɪzər ɪnˌɡreɪvɪŋ/",
+    "Laser engraving is used for product identification.",
+    "manufacturing"
+  ],
+  [
+    "grinding",
+    "研磨",
+    "⚙",
+    "/ˈɡraɪndɪŋ/",
+    "Grinding improves dimensional accuracy.",
+    "manufacturing"
+  ],
+  [
+    "polishing",
+    "拋光",
+    "✦",
+    "/ˈpɑːlɪʃɪŋ/",
+    "Polishing improves the surface finish.",
+    "manufacturing"
+  ],
+  [
+    "mold",
+    "模具",
+    "🧰",
+    "/moʊld/",
+    "The mold needs regular maintenance.",
+    "manufacturing"
+  ],
+  [
+    "slider",
+    "滑塊",
+    "↔",
+    "/ˈslaɪdər/",
+    "The slider creates the side feature.",
+    "manufacturing"
+  ],
+  [
+    "angled pin",
+    "斜銷",
+    "📐",
+    "/ˈæŋɡəld pɪn/",
+    "The angled pin releases the undercut.",
+    "manufacturing"
+  ],
+  [
+    "shut-off",
+    "靠破",
+    "▣",
+    "/ˈʃʌt ɔːf/",
+    "The shut-off surface must seal properly.",
+    "manufacturing"
+  ],
+  [
+    "air trap",
+    "包風",
+    "💨",
+    "/er træp/",
+    "The mold flow has an air trap.",
+    "manufacturing"
+  ],
+  [
+    "parting line",
+    "結合線／分模線",
+    "—",
+    "/ˈpɑːrtɪŋ laɪn/",
+    "The parting line is visible on the housing.",
+    "manufacturing"
+  ],
+  [
+    "stress line",
+    "應力痕",
+    "〰",
+    "/stres laɪn/",
+    "A stress line appeared after molding.",
+    "manufacturing"
+  ],
+  [
+    "ejector mark",
+    "頂針痕",
+    "⊙",
+    "/ɪˈdʒektər mɑːrk/",
+    "The ejector mark is visible on the back side.",
+    "manufacturing"
+  ],
+  [
+    "core",
+    "公模",
+    "▰",
+    "/kɔːr/",
+    "The core forms the internal feature.",
+    "manufacturing"
+  ],
+  [
+    "cavity",
+    "母模",
+    "▱",
+    "/ˈkævəti/",
+    "The cavity forms the external surface.",
+    "manufacturing"
+  ],
+  [
+    "advantage",
+    "優點",
+    "👍",
+    "/ədˈvæntɪdʒ/",
+    "One advantage is lower assembly cost.",
+    "interview"
+  ],
+  [
+    "shortcoming",
+    "缺點",
+    "👎",
+    "/ˈʃɔːrtkʌmɪŋ/",
+    "The main shortcoming is the added weight.",
+    "interview"
+  ],
+  [
+    "impatient",
+    "個性著急",
+    "⏱",
+    "/ɪmˈpeɪʃənt/",
+    "I can become impatient when a project is delayed.",
+    "interview"
+  ],
+  [
+    "interference",
+    "干涉",
+    "🚧",
+    "/ˌɪntərˈfɪrəns/",
+    "We found interference between the bracket and housing.",
+    "interview"
+  ],
+  [
+    "efficiency",
+    "效率",
+    "⚡",
+    "/ɪˈfɪʃənsi/",
+    "We improved assembly efficiency by simplifying the design.",
+    "interview"
+  ],
+  [
+    "innovative",
+    "創新的",
+    "💡",
+    "/ˈɪnəveɪtɪv/",
+    "We developed an innovative cooling solution.",
+    "interview"
+  ],
+  [
+    "comprehensive",
+    "綜合的",
+    "📋",
+    "/ˌkɑːmprɪˈhensɪv/",
+    "We performed a comprehensive design review.",
+    "interview"
+  ],
+  [
+    "familiar",
+    "熟悉的",
+    "🤝",
+    "/fəˈmɪliər/",
+    "I am familiar with injection molding.",
+    "interview"
+  ],
+  [
+    "similar",
+    "相似的",
+    "≈",
+    "/ˈsɪmələr/",
+    "We compared it with a similar product.",
+    "interview"
+  ],
+  [
+    "specific",
+    "具體的",
+    "🎯",
+    "/spəˈsɪfɪk/",
+    "Please provide a specific example.",
+    "interview"
+  ],
+  [
+    "essential",
+    "基本／不可或缺",
+    "★",
+    "/ɪˈsenʃəl/",
+    "Thermal validation is essential for this product.",
+    "interview"
+  ],
+  [
+    "shipments",
+    "出貨量",
+    "📦",
+    "/ˈʃɪpmənts/",
+    "The monthly shipments increased significantly.",
+    "interview"
+  ],
+  [
+    "reverse",
+    "顛倒／反轉",
+    "↻",
+    "/rɪˈvɜːrs/",
+    "The component was installed in reverse.",
+    "interview"
+  ],
+  [
+    "amplification",
+    "放大",
+    "🔍",
+    "/ˌæmplɪfɪˈkeɪʃən/",
+    "Signal amplification improves detection.",
+    "optics"
+  ],
+  [
+    "penetrate",
+    "插入／穿透",
+    "→",
+    "/ˈpenətreɪt/",
+    "Moisture can penetrate the seal.",
+    "interview"
+  ],
+  [
+    "torque",
+    "扭力",
+    "🔧",
+    "/tɔːrk/",
+    "Apply the specified torque to the screw.",
+    "manufacturing"
+  ],
+  [
+    "appropriate",
+    "適當的",
+    "✓",
+    "/əˈproʊpriət/",
+    "Choose an appropriate material for the application.",
+    "interview"
+  ],
+  [
+    "classification",
+    "分類",
+    "🗂",
+    "/ˌklæsɪfɪˈkeɪʃən/",
+    "We use classification to organize the defects.",
+    "interview"
+  ],
+  [
+    "phase change",
+    "相變化",
+    "🌡",
+    "/feɪz tʃeɪndʒ/",
+    "Phase change can absorb a large amount of heat.",
+    "thermal"
+  ],
+  [
+    "curved surface",
+    "曲面",
+    "◯",
+    "/kɜːrvd ˈsɜːrfɪs/",
+    "The lens cover has a curved surface.",
+    "optics"
+  ],
+  [
+    "indispensable",
+    "不可或缺",
+    "★",
+    "/ˌɪndɪˈspensəbəl/",
+    "Thermal simulation is indispensable for this design.",
+    "interview"
+  ],
+  [
+    "divided into",
+    "分為",
+    "÷",
+    "/dɪˈvaɪdɪd ˈɪntuː/",
+    "The system is divided into three modules.",
+    "interview"
+  ],
+  [
+    "architecture",
+    "架構",
+    "🏗",
+    "/ˈɑːrkɪtektʃər/",
+    "We reviewed the mechanical architecture.",
+    "interview"
+  ],
+  [
+    "uncontrollable factors",
+    "不可控因素",
+    "?",
+    "/ˌʌnkənˈtroʊləbəl ˈfæktərz/",
+    "We need to consider uncontrollable factors.",
+    "interview"
+  ],
+  [
+    "visualization",
+    "可視化",
+    "📊",
+    "/ˌvɪʒuələˈzeɪʃən/",
+    "Visualization helps us understand airflow.",
+    "interview"
+  ],
+  [
+    "multiple",
+    "多個",
+    "⑵",
+    "/ˈmʌltəpəl/",
+    "We tested multiple prototypes.",
+    "interview"
+  ],
+  [
+    "heat shrink tubing",
+    "熱縮套管",
+    "▣",
+    "/hiːt ʃrɪŋk ˈtuːbɪŋ/",
+    "Use heat shrink tubing to protect the wire.",
+    "manufacturing"
+  ],
+  [
+    "groove",
+    "溝槽",
+    "〰",
+    "/ɡruːv/",
+    "The O-ring sits in the groove.",
+    "manufacturing"
+  ],
+  [
+    "humidity",
+    "濕度",
+    "💧",
+    "/hjuːˈmɪdəti/",
+    "High humidity can cause condensation.",
+    "thermal"
+  ],
+  [
+    "reflection",
+    "反射",
+    "↔",
+    "/rɪˈflekʃən/",
+    "Reflection can affect image quality.",
+    "optics"
+  ],
+  [
+    "desiccant packet",
+    "乾燥包",
+    "📦",
+    "/ˈdesɪkənt ˈpækɪt/",
+    "Place a desiccant packet inside the package.",
+    "manufacturing"
+  ],
+  [
+    "water vapor",
+    "水氣",
+    "💧",
+    "/ˈwɔːtər ˈveɪpər/",
+    "Water vapor may condense inside the housing.",
+    "thermal"
+  ],
+  [
+    "airtightness test",
+    "氣密測試",
+    "🔒",
+    "/ˈerˌtaɪtnəs test/",
+    "We performed an airtightness test.",
+    "manufacturing"
+  ],
+  [
+    "RMS (root mean square)",
+    "均方根",
+    "📐",
+    "/ruːt miːn skwer/",
+    "We calculated the RMS value.",
+    "interview"
+  ],
+  [
+    "hot-swappable",
+    "熱插拔",
+    "🔌",
+    "/ˌhɑːt ˈswɑːpəbəl/",
+    "The module is hot-swappable.",
+    "interview"
+  ],
+  [
+    "airflow guide",
+    "導風罩",
+    "🌬",
+    "/ˈerfloʊ ɡaɪd/",
+    "The airflow guide directs air toward the heat sink.",
+    "thermal"
+  ],
+  [
+    "accumulation",
+    "累積",
+    "📈",
+    "/əˌkjuːmjəˈleɪʃən/",
+    "Dust accumulation reduces cooling performance.",
+    "thermal"
+  ],
+  [
+    "dispensing",
+    "點膠",
+    "💉",
+    "/dɪˈspensɪŋ/",
+    "Automated dispensing improves glue consistency.",
+    "manufacturing"
+  ],
+  [
+    "prevent",
+    "防止",
+    "🛡",
+    "/prɪˈvent/",
+    "The gasket helps prevent water ingress.",
+    "interview"
+  ],
+  [
+    "distributors",
+    "經銷商",
+    "🚚",
+    "/dɪˈstrɪbjətərz/",
+    "The product is sold through distributors.",
+    "interview"
+  ],
+  [
+    "crater",
+    "火山口",
+    "◉",
+    "/ˈkreɪtər/",
+    "A crater-like defect appeared after dispensing.",
+    "manufacturing"
+  ],
+  [
+    "stress concentration",
+    "應力集中",
+    "⚠",
+    "/stres ˌkɑːnsənˈtreɪʃən/",
+    "The fillet reduces stress concentration.",
+    "manufacturing"
+  ],
+  [
+    "heat source",
+    "發熱源",
+    "🔥",
+    "/hiːt sɔːrs/",
+    "We identified the main heat source.",
+    "thermal"
+  ],
+  [
+    "optimized",
+    "最佳化的",
+    "⚙",
+    "/ˈɑːptəmaɪzd/",
+    "The airflow path was optimized.",
+    "interview"
+  ],
+  [
+    "uniformity",
+    "均勻性",
+    "▤",
+    "/ˌjuːnɪˈfɔːrməti/",
+    "We checked temperature uniformity.",
+    "thermal"
+  ],
+  [
+    "natural convection",
+    "自然對流",
+    "↑↓",
+    "/ˈnætʃərəl kənˈvekʃən/",
+    "Natural convection cools the enclosure.",
+    "thermal"
+  ],
+  [
+    "forced convection",
+    "強制對流",
+    "🌀",
+    "/fɔːrst kənˈvekʃən/",
+    "Forced convection improves heat dissipation.",
+    "thermal"
+  ],
+  [
+    "thermal conductivity",
+    "導熱率",
+    "→",
+    "/ˈθɜːrməl ˌkɑːndʌkˈtɪvəti/",
+    "Copper has high thermal conductivity.",
+    "thermal"
+  ],
+  [
+    "thermal paste",
+    "導熱膏",
+    "🧴",
+    "/ˈθɜːrməl peɪst/",
+    "Apply thermal paste between the chip and heat sink.",
+    "thermal"
+  ],
+  [
+    "thermal resistance",
+    "熱阻",
+    "Ω",
+    "/ˈθɜːrməl rɪˈzɪstəns/",
+    "Lower thermal resistance improves cooling.",
+    "thermal"
+  ],
+  [
+    "excessive",
+    "過多的",
+    "↑",
+    "/ɪkˈsesɪv/",
+    "Excessive clamping force may deform the part.",
+    "interview"
+  ],
+  [
+    "clamping force",
+    "夾緊力",
+    "🗜",
+    "/ˈklæmpɪŋ fɔːrs/",
+    "Control the clamping force carefully.",
+    "manufacturing"
+  ],
+  [
+    "on the contrary",
+    "反之",
+    "↔",
+    "/ɑːn ðə ˈkɑːntreri/",
+    "On the contrary, the new design is lighter.",
+    "interview"
+  ],
+  [
+    "overall strength",
+    "整體強度",
+    "💪",
+    "/ˈoʊvərɔːl streŋθ/",
+    "The rib improves overall strength.",
+    "manufacturing"
+  ],
+  [
+    "vignette",
+    "暗角",
+    "◌",
+    "/vɪˈnjet/",
+    "The lens shows slight vignette at the corner.",
+    "optics"
+  ],
+  [
+    "persuade",
+    "說服",
+    "🗣",
+    "/pərˈsweɪd/",
+    "I persuaded the team to run another validation test.",
+    "interview"
+  ],
+  [
+    "iterate",
+    "反覆修改／迭代",
+    "↻",
+    "/ˈɪtəreɪt/",
+    "We iterate the design based on test results.",
+    "interview"
+  ],
+  [
+    "forming jig",
+    "整型治具",
+    "🛠",
+    "/ˈfɔːrmɪŋ dʒɪɡ/",
+    "The forming jig improves repeatability.",
+    "manufacturing"
+  ],
+  [
+    "refractive index",
+    "折射率",
+    "🔬",
+    "/rɪˈfræktɪv ˈɪndeks/",
+    "The refractive index affects optical performance.",
+    "optics"
+  ],
+  [
+    "wavelength",
+    "波長",
+    "〰",
+    "/ˈweɪvleŋθ/",
+    "The sensor operates at a specific wavelength.",
+    "optics"
+  ],
+  [
+    "degree Celsius",
+    "度C",
+    "°C",
+    "/dɪˈɡriː ˈselsiəs/",
+    "The test temperature is 60 degrees Celsius.",
+    "thermal"
+  ],
+  [
+    "potting",
+    "灌封",
+    "🫙",
+    "/ˈpɑːtɪŋ/",
+    "Potting protects the electronics from moisture.",
+    "manufacturing"
+  ],
+  [
+    "evaluate",
+    "評估",
+    "🔎",
+    "/ɪˈvæljueɪt/",
+    "We evaluate the design using test data.",
+    "interview"
+  ],
+  [
+    "acoustics",
+    "聲學",
+    "🔊",
+    "/əˈkuːstɪks/",
+    "We considered acoustics during fan selection.",
+    "thermal"
+  ],
+  [
+    "design for manufacturability (DFM)",
+    "可製造性設計",
+    "🏭",
+    "/dɪˈzaɪn fər ˌmænjəfæktʃərəbɪləti/",
+    "We reviewed the design for manufacturability.",
+    "manufacturing"
+  ],
+  [
+    "develop",
+    "開發",
+    "🧪",
+    "/dɪˈveləp/",
+    "I developed a new bracket design.",
+    "interview"
+  ],
+  [
+    "integrate",
+    "整合",
+    "🔗",
+    "/ˈɪntəɡreɪt/",
+    "We integrated the sensor into the housing.",
+    "interview"
+  ],
+  [
+    "validate",
+    "驗證",
+    "✓",
+    "/ˈvælədeɪt/",
+    "We validated the design with testing.",
+    "interview"
+  ],
+  [
+    "verify",
+    "確認／驗證",
+    "✓",
+    "/ˈverɪfaɪ/",
+    "We verified the dimensions before tooling.",
+    "interview"
+  ],
+  [
+    "collaborate",
+    "與……協作",
+    "🤝",
+    "/kəˈlæbəreɪt/",
+    "I collaborated with the EE team.",
+    "interview"
+  ],
+  [
+    "coordinate",
+    "協調",
+    "🤝",
+    "/koʊˈɔːrdəneɪt/",
+    "I coordinated with the supplier.",
+    "interview"
+  ],
+  [
+    "troubleshoot",
+    "排除問題",
+    "🔧",
+    "/ˈtrʌbəlʃuːt/",
+    "I troubleshoot mechanical issues on the line.",
+    "interview"
+  ],
+  [
+    "mitigate",
+    "降低風險",
+    "🛡",
+    "/ˈmɪtəɡeɪt/",
+    "We mitigated the risk with a design change.",
+    "interview"
+  ],
+  [
+    "streamline",
+    "簡化流程",
+    "→",
+    "/ˈstriːmlaɪn/",
+    "We streamlined the assembly process.",
+    "interview"
+  ],
+  [
+    "prototype",
+    "打樣／原型",
+    "🧩",
+    "/ˈproʊtətaɪp/",
+    "We built a prototype for validation.",
+    "manufacturing"
+  ],
+  [
+    "benchmark",
+    "標竿比較",
+    "📊",
+    "/ˈbentʃmɑːrk/",
+    "We benchmarked the competitor's product.",
+    "interview"
+  ],
+  [
+    "trade-off",
+    "取捨",
+    "⚖",
+    "/ˈtreɪd ɔːf/",
+    "There is a trade-off between weight and strength.",
+    "interview"
+  ],
+  [
+    "root cause",
+    "根本原因",
+    "🔍",
+    "/ruːt kɔːz/",
+    "We identified the root cause of the failure.",
+    "interview"
+  ],
+  [
+    "own a project",
+    "主導／全權負責",
+    "👤",
+    "/oʊn ə ˈprɑːdʒekt/",
+    "I owned the mechanical design project.",
+    "interview"
+  ],
+  [
+    "drive a project forward",
+    "推動專案",
+    "🚀",
+    "/draɪv ə ˈprɑːdʒekt ˈfɔːrwərd/",
+    "I drove the project forward despite the delay.",
+    "interview"
+  ],
+  [
+    "spec out",
+    "訂規格",
+    "📋",
+    "/spek aʊt/",
+    "We spec'd out the material and tolerance.",
+    "interview"
+  ],
+  [
+    "prioritize",
+    "排優先順序",
+    "🥇",
+    "/praɪˈɔːrətaɪz/",
+    "I prioritized the critical issues first.",
+    "interview"
+  ],
+  [
+    "sign off on",
+    "簽核／核准",
+    "✍",
+    "/saɪn ɔːf ɑːn/",
+    "The customer signed off on the design.",
+    "interview"
+  ],
+  [
+    "ramp up production",
+    "量產爬坡",
+    "📈",
+    "/ræmp ʌp prəˈdʌkʃən/",
+    "We ramped up production after validation.",
+    "manufacturing"
+  ],
+  [
+    "de-risk",
+    "降低風險",
+    "🛡",
+    "/diː rɪsk/",
+    "Early prototyping helps de-risk the design.",
+    "interview"
+  ],
+  [
+    "die casting",
+    "壓鑄",
+    "🏭",
+    "/daɪ ˈkæstɪŋ/",
+    "The housing is made by die casting.",
+    "manufacturing"
+  ],
+  [
+    "injection molding",
+    "射出成型",
+    "🧱",
+    "/ɪnˈdʒekʃən ˈmoʊldɪŋ/",
+    "The cover is made by injection molding.",
+    "manufacturing"
+  ],
+  [
+    "sheet metal",
+    "鈑金",
+    "▤",
+    "/ʃiːt ˈmetəl/",
+    "The bracket is a sheet metal part.",
+    "manufacturing"
+  ],
+  [
+    "draft angle",
+    "脫模角",
+    "📐",
+    "/dræft ˈæŋɡəl/",
+    "The mold needs sufficient draft angle.",
+    "manufacturing"
+  ],
+  [
+    "wall thickness",
+    "壁厚",
+    "↕",
+    "/wɔːl ˈθɪknəs/",
+    "Uniform wall thickness reduces warpage.",
+    "manufacturing"
+  ],
+  [
+    "warpage",
+    "翹曲",
+    "〰",
+    "/ˈwɔːrpɪdʒ/",
+    "We reduced warpage by changing the gate location.",
+    "manufacturing"
+  ],
+  [
+    "shrinkage",
+    "收縮率",
+    "↘",
+    "/ˈʃrɪŋkɪdʒ/",
+    "We considered material shrinkage in the mold design.",
+    "manufacturing"
+  ],
+  [
+    "gate location",
+    "澆口位置",
+    "📍",
+    "/ɡeɪt loʊˈkeɪʃən/",
+    "Gate location affects filling and warpage.",
+    "manufacturing"
+  ],
+  [
+    "tooling",
+    "模具／治具",
+    "🧰",
+    "/ˈtuːlɪŋ/",
+    "Tooling cost must be considered early.",
+    "manufacturing"
+  ],
+  [
+    "first article inspection (FAI)",
+    "首件檢驗",
+    "🔎",
+    "/fɜːrst ˈɑːrtɪkəl ɪnˈspekʃən/",
+    "FAI was completed before mass production.",
+    "manufacturing"
+  ],
+  [
+    "yield rate",
+    "良率",
+    "📈",
+    "/jiːld reɪt/",
+    "The yield rate improved after the process change.",
+    "manufacturing"
+  ],
+  [
+    "surface finish",
+    "表面處理",
+    "✦",
+    "/ˈsɜːrfɪs ˈfɪnɪʃ/",
+    "The surface finish meets the specification.",
+    "manufacturing"
+  ],
+  [
+    "color consistency",
+    "色差一致性",
+    "🎨",
+    "/ˈkʌlər kənˈsɪstənsi/",
+    "We checked color consistency using Delta E.",
+    "manufacturing"
+  ],
+  [
+    "mold flow analysis",
+    "模流分析",
+    "💧",
+    "/moʊld floʊ əˈnæləsɪs/",
+    "Mold flow analysis predicted the weld line.",
+    "manufacturing"
+  ],
+  [
+    "undercut",
+    "倒勾",
+    "↩",
+    "/ˈʌndərkʌt/",
+    "The undercut requires a slider.",
+    "manufacturing"
+  ],
+  [
+    "screw boss",
+    "螺絲柱",
+    "🔩",
+    "/skruː bɔːs/",
+    "The screw boss cracked during assembly.",
+    "manufacturing"
+  ],
+  [
+    "heat dissipation",
+    "散熱",
+    "🔥",
+    "/hiːt ˌdɪsəˈpeɪʃən/",
+    "Heat dissipation is critical for the processor.",
+    "thermal"
+  ],
+  [
+    "heat sink",
+    "散熱片",
+    "▤",
+    "/hiːt sɪŋk/",
+    "The heat sink transfers heat to the air.",
+    "thermal"
+  ],
+  [
+    "thermal path",
+    "熱傳導路徑",
+    "→",
+    "/ˈθɜːrməl pæθ/",
+    "We optimized the thermal path.",
+    "thermal"
+  ],
+  [
+    "thermal simulation",
+    "熱模擬",
+    "💻",
+    "/ˈθɜːrməl ˌsɪmjəˈleɪʃən/",
+    "Thermal simulation showed a hot spot.",
+    "thermal"
+  ],
+  [
+    "conduction",
+    "傳導",
+    "→",
+    "/kənˈdʌkʃən/",
+    "Conduction transfers heat through the material.",
+    "thermal"
+  ],
+  [
+    "convection",
+    "對流",
+    "↑↓",
+    "/kənˈvekʃən/",
+    "Convection transfers heat through moving fluid.",
+    "thermal"
+  ],
+  [
+    "radiation",
+    "輻射",
+    "☀",
+    "/ˌreɪdiˈeɪʃən/",
+    "Radiation also contributes to heat transfer.",
+    "thermal"
+  ],
+  [
+    "thermal pad",
+    "導熱墊",
+    "▰",
+    "/ˈθɜːrməl pæd/",
+    "The thermal pad fills the gap.",
+    "thermal"
+  ],
+  [
+    "gap filler",
+    "填隙材料",
+    "▰",
+    "/ɡæp ˈfɪlər/",
+    "The gap filler improves thermal contact.",
+    "thermal"
+  ],
+  [
+    "hot spot",
+    "熱點",
+    "🔥",
+    "/hɑːt spɑːt/",
+    "The simulation identified a hot spot.",
+    "thermal"
+  ],
+  [
+    "steady state",
+    "穩態",
+    "⏸",
+    "/ˈstedi steɪt/",
+    "We waited until the system reached steady state.",
+    "thermal"
+  ],
+  [
+    "airflow",
+    "氣流",
+    "🌬",
+    "/ˈerfloʊ/",
+    "We measured airflow around the enclosure.",
+    "thermal"
+  ],
+  [
+    "fanless",
+    "無風扇",
+    "○",
+    "/ˈfænləs/",
+    "The design is fanless for lower noise.",
+    "thermal"
+  ],
+  [
+    "ambient temperature",
+    "環境溫度",
+    "🌡",
+    "/ˈæmbiənt ˈtemprətʃər/",
+    "The test was performed at ambient temperature.",
+    "thermal"
+  ],
+  [
+    "boundary condition",
+    "邊界條件",
+    "📐",
+    "/ˈbaʊndri kənˈdɪʃən/",
+    "We defined the boundary conditions for the simulation.",
+    "thermal"
+  ],
+  [
+    "fan P-Q curve",
+    "風扇壓力-流量曲線",
+    "📈",
+    "/fæn piː kjuː kɜːrv/",
+    "We selected the fan using its P-Q curve.",
+    "thermal"
+  ],
+  [
+    "EMI shielding",
+    "電磁遮蔽",
+    "🛡",
+    "/ˌiː em ˈaɪ ˈʃiːldɪŋ/",
+    "The metal frame provides EMI shielding.",
+    "interview"
+  ],
+  [
+    "grounding path",
+    "接地路徑",
+    "↘",
+    "/ˈɡraʊndɪŋ pæθ/",
+    "We checked the grounding path.",
+    "interview"
+  ],
+  [
+    "vent hole",
+    "通風孔",
+    "⭕",
+    "/vent hoʊl/",
+    "The vent holes improve airflow.",
+    "thermal"
+  ],
+  [
+    "ingress protection (IP rating)",
+    "防護等級",
+    "💧",
+    "/ˈɪnɡres prəˈtekʃən/",
+    "The enclosure has an IP rating requirement.",
+    "manufacturing"
+  ],
+  [
+    "O-ring",
+    "O 型環",
+    "⭕",
+    "/ˈoʊ rɪŋ/",
+    "The O-ring seals the joint.",
+    "manufacturing"
+  ],
+  [
+    "gasket",
+    "墊圈／密封條",
+    "◯",
+    "/ˈɡæskɪt/",
+    "The gasket prevents water ingress.",
+    "manufacturing"
+  ],
+  [
+    "compression set",
+    "壓縮永久變形",
+    "↕",
+    "/kəmˈpreʃən set/",
+    "We measured compression set after aging.",
+    "manufacturing"
+  ],
+  [
+    "leak test",
+    "漏氣測試",
+    "🔎",
+    "/liːk test/",
+    "The housing passed the leak test.",
+    "manufacturing"
+  ],
+  [
+    "moisture condensation",
+    "水氣凝結",
+    "💧",
+    "/ˈmɔɪstʃər ˌkɑːndenˈseɪʃən/",
+    "Moisture condensation can damage electronics.",
+    "thermal"
+  ],
+  [
+    "breathable vent membrane",
+    "呼吸閥／透氣膜",
+    "🌬",
+    "/ˈbriːðəbəl vent ˈmembreɪn/",
+    "The vent membrane equalizes pressure.",
+    "manufacturing"
+  ],
+  [
+    "pressure differential",
+    "壓差",
+    "↕",
+    "/ˈpreʃər ˌdɪfəˈrenʃəl/",
+    "Pressure differential can deform the membrane.",
+    "manufacturing"
+  ],
+  [
+    "vacuum test",
+    "真空測試",
+    "🫧",
+    "/ˈvækjuəm test/",
+    "We performed a vacuum test.",
+    "manufacturing"
+  ],
+  [
+    "dye penetrant test",
+    "染色測試",
+    "🧪",
+    "/daɪ ˈpenətrənt test/",
+    "The dye penetrant test detected cracks.",
+    "manufacturing"
+  ],
+  [
+    "seal interface",
+    "密封介面",
+    "🔒",
+    "/siːl ˈɪntərfeɪs/",
+    "The seal interface must be clean.",
+    "manufacturing"
+  ],
+  [
+    "salt spray test",
+    "鹽霧測試",
+    "🌊",
+    "/sɔːlt spreɪ test/",
+    "The coating passed the salt spray test.",
+    "manufacturing"
+  ],
+  [
+    "UV aging test",
+    "UV老化測試",
+    "☀",
+    "/juː viː ˈeɪdʒɪŋ test/",
+    "The material passed the UV aging test.",
+    "manufacturing"
+  ],
+  [
+    "image sensor",
+    "影像感測器",
+    "📷",
+    "/ˈɪmɪdʒ ˈsensər/",
+    "The image sensor is aligned with the lens.",
+    "optics"
+  ],
+  [
+    "lens module",
+    "鏡頭模組",
+    "📷",
+    "/lenz ˈmɑːdʒuːl/",
+    "The lens module is mounted on the PCB.",
+    "optics"
+  ],
+  [
+    "field of view (FOV)",
+    "視角",
+    "👁",
+    "/fiːld əv vjuː/",
+    "The lens has a wide field of view.",
+    "optics"
+  ],
+  [
+    "IR cut filter",
+    "紅外線截止濾光片",
+    "🔴",
+    "/ˌaɪ ˈɑːr kʌt ˈfɪltər/",
+    "The IR cut filter changes between day and night mode.",
+    "optics"
+  ],
+  [
+    "glare",
+    "眩光",
+    "☀",
+    "/ɡler/",
+    "Glare can reduce image quality.",
+    "optics"
+  ],
+  [
+    "ghosting",
+    "鬼影",
+    "👻",
+    "/ˈɡoʊstɪŋ/",
+    "Ghosting appeared near the bright light source.",
+    "optics"
+  ],
+  [
+    "optical alignment",
+    "光學對位",
+    "🎯",
+    "/ˈɑːptɪkəl əˈlaɪnmənt/",
+    "Optical alignment is critical for image quality.",
+    "optics"
+  ],
+  [
+    "back focal length",
+    "後焦距",
+    "📏",
+    "/bæk ˈfoʊkəl leŋθ/",
+    "We measured the back focal length.",
+    "optics"
+  ],
+  [
+    "PCB placement",
+    "電路板配置",
+    "▦",
+    "/ˌpiː siː ˈbiː ˈpleɪsmənt/",
+    "PCB placement affects the mechanical layout.",
+    "optics"
+  ],
+  [
+    "tolerance stack-up",
+    "公差堆疊",
+    "📐",
+    "/ˈtɑːlərəns stæk ʌp/",
+    "We performed a tolerance stack-up analysis.",
+    "interview"
+  ],
+  [
+    "worst-case analysis",
+    "最壞情況分析",
+    "⚠",
+    "/wɜːrst keɪs əˈnæləsɪs/",
+    "Worst-case analysis checks the maximum variation.",
+    "interview"
+  ],
+  [
+    "statistical tolerance (RSS)",
+    "統計公差（均方根法）",
+    "📊",
+    "/stəˈtɪstɪkəl ˈtɑːlərəns/",
+    "We used RSS for the statistical tolerance analysis.",
+    "interview"
+  ],
+  [
+    "GD&T",
+    "幾何尺寸與公差標註",
+    "📐",
+    "/ˌdʒiː diː ən ˈtiː/",
+    "GD&T controls the geometric variation.",
+    "interview"
+  ],
+  [
+    "dimensional inspection",
+    "尺寸檢驗",
+    "🔎",
+    "/dɪˈmenʃənəl ɪnˈspekʃən/",
+    "Dimensional inspection confirmed the drawing.",
+    "manufacturing"
+  ],
+  [
+    "corrective action",
+    "矯正措施",
+    "🛠",
+    "/kəˈrektɪv ˈækʃən/",
+    "We defined corrective actions for the defect.",
+    "interview"
+  ],
+  [
+    "fit clearance",
+    "配合間隙",
+    "↔",
+    "/fɪt ˈklɪrəns/",
+    "We checked the fit clearance.",
+    "manufacturing"
+  ],
+  [
+    "interference fit",
+    "過盈配合",
+    "🔩",
+    "/ˌɪntərˈfɪrəns fɪt/",
+    "The bearing uses an interference fit.",
+    "manufacturing"
+  ],
+  [
+    "process capability (Cpk)",
+    "製程能力指數",
+    "📈",
+    "/ˈprɑːses ˌkeɪ piː ˈkeɪ/",
+    "We checked Cpk before mass production.",
+    "manufacturing"
+  ],
+  [
+    "8D report",
+    "8D報告",
+    "📄",
+    "/eɪt diː rɪˈpɔːrt/",
+    "The supplier submitted an 8D report.",
+    "interview"
+  ],
+  [
+    "supplier audit",
+    "供應商稽核",
+    "🏭",
+    "/səˈplaɪər ˈɔːdɪt/",
+    "We conducted a supplier audit.",
+    "interview"
+  ],
+  [
+    "cross-functional team",
+    "跨部門團隊",
+    "🤝",
+    "/krɔːs ˈfʌŋkʃənəl tiːm/",
+    "I worked with a cross-functional team.",
+    "interview"
+  ],
+  [
+    "stakeholder",
+    "利害關係人",
+    "👥",
+    "/ˈsteɪkhoʊldər/",
+    "We aligned with key stakeholders.",
+    "interview"
+  ],
+  [
+    "lead time",
+    "交期",
+    "⏳",
+    "/liːd taɪm/",
+    "We reduced supplier lead time.",
+    "interview"
+  ],
+  [
+    "milestone",
+    "里程碑",
+    "🚩",
+    "/ˈmaɪlstoʊn/",
+    "We reached the prototype milestone.",
+    "interview"
+  ],
+  [
+    "design review (DR)",
+    "設計審查",
+    "📋",
+    "/dɪˈzaɪn rɪˈvjuː/",
+    "We held a design review before tooling.",
+    "interview"
+  ],
+  [
+    "escalate",
+    "上報／升級處理",
+    "⬆",
+    "/ˈeskəleɪt/",
+    "We escalated the issue to the supplier.",
+    "interview"
+  ],
+  [
+    "align with",
+    "對齊／達成共識",
+    "🎯",
+    "/əˈlaɪn wɪð/",
+    "We aligned with the EE team.",
+    "interview"
+  ],
+  [
+    "ownership",
+    "主動負責的態度",
+    "👤",
+    "/ˈoʊnərʃɪp/",
+    "I took ownership of the project.",
+    "interview"
+  ],
+  [
+    "buy-in",
+    "認同／支持",
+    "👍",
+    "/ˈbaɪ ɪn/",
+    "We got buy-in from the team.",
+    "interview"
+  ],
+  [
+    "risk assessment",
+    "風險評估",
+    "⚠",
+    "/rɪsk əˈsesmənt/",
+    "We performed a risk assessment.",
+    "interview"
+  ],
+  [
+    "kickoff meeting",
+    "啟動會議",
+    "🚀",
+    "/ˈkɪkɔːf ˈmiːtɪŋ/",
+    "We held a kickoff meeting with the supplier.",
+    "interview"
+  ],
+  [
+    "post-mortem",
+    "事後檢討",
+    "🔎",
+    "/poʊst ˈmɔːrtəm/",
+    "We conducted a post-mortem after the failure.",
+    "interview"
+  ],
+  [
+    "engineering change request (ECR/ECN)",
+    "工程變更申請／通知",
+    "📝",
+    "/ˌendʒɪˈnɪrɪŋ tʃeɪndʒ rɪˈkwest/",
+    "We submitted an engineering change request.",
+    "interview"
+  ],
+  [
+    "The main challenge was...",
+    "主要的挑戰是……",
+    "🧗",
+    "/ðə meɪn ˈtʃælɪndʒ wəz/",
+    "The main challenge was limited space.",
+    "interview"
+  ],
+  [
+    "What made this difficult was...",
+    "讓這件事困難的原因是……",
+    "🧩",
+    "/wʌt meɪd ðɪs ˈdɪfɪkəlt wəz/",
+    "What made this difficult was the tight tolerance.",
+    "interview"
+  ],
+  [
+    "My approach was to...",
+    "我的做法是……",
+    "🧭",
+    "/maɪ əˈproʊtʃ wəz tuː/",
+    "My approach was to validate the root cause first.",
+    "interview"
+  ],
+  [
+    "I ended up...",
+    "我最後……",
+    "→",
+    "/aɪ endɪd ʌp/",
+    "I ended up changing the bracket design.",
+    "interview"
+  ],
+  [
+    "As a result, we achieved...",
+    "結果我們達成了……",
+    "🏆",
+    "/æz ə rɪˈzʌlt wi əˈtʃiːvd/",
+    "As a result, we achieved a higher yield rate.",
+    "interview"
+  ],
+  [
+    "Looking back, I would...",
+    "回顧起來，我會……",
+    "↩",
+    "/ˈlʊkɪŋ bæk aɪ wʊd/",
+    "Looking back, I would involve the supplier earlier.",
+    "interview"
+  ],
+  [
+    "To give you a concrete example...",
+    "舉一個具體例子……",
+    "🎯",
+    "/tuː ɡɪv juː ə ˈkɑːnkriːt ɪɡˈzæmpəl/",
+    "To give you a concrete example, we reduced the gap.",
+    "interview"
+  ],
+  [
+    "We validated this through...",
+    "我們透過……來驗證",
+    "✓",
+    "/wi ˈvælədeɪtɪd ðɪs θruː/",
+    "We validated this through thermal testing.",
+    "interview"
+  ],
+  [
+    "This was traced back to...",
+    "這最後被追溯到……",
+    "🔍",
+    "/ðɪs wəz treɪst bæk tuː/",
+    "This was traced back to a tolerance issue.",
+    "interview"
+  ],
+  [
+    "One thing I learned from this was...",
+    "我從這件事學到的是……",
+    "💡",
+    "/wʌn θɪŋ aɪ lɜːrnd frəm ðɪs wəz/",
+    "One thing I learned from this was to validate early.",
+    "interview"
+  ],
+  [
+    "reduce X by [value]",
+    "降低……（數值）",
+    "↘",
+    "/rɪˈduːs/",
+    "We reduced the weight by 10 percent.",
+    "interview"
+  ],
+  [
+    "increase from X to Y",
+    "從……提升到……",
+    "↗",
+    "/ɪnˈkriːs frəm eks tuː waɪ/",
+    "We increased the yield from 92 to 97 percent.",
+    "interview"
+  ],
+  [
+    "IoT",
+    "物聯網",
+    "🌐",
+    "/ˌaɪ oʊ ˈtiː/",
+    "The camera is part of an IoT home security system.",
+    "iot_ipcam"
+  ],
+  [
+    "IP camera",
+    "網路攝影機",
+    "📷",
+    "/ˌaɪ ˈpiː ˈkæmərə/",
+    "The IP camera connects to the network through Wi-Fi.",
+    "iot_ipcam"
+  ],
+  [
+    "camera housing",
+    "攝影機外殼",
+    "📦",
+    "/ˈkæmərə ˈhaʊzɪŋ/",
+    "The camera housing must protect the internal components.",
+    "iot_ipcam"
+  ],
+  [
+    "enclosure",
+    "外殼",
+    "📦",
+    "/ɪnˈkloʊʒər/",
+    "The enclosure needs to meet the IP67 requirement.",
+    "iot_ipcam"
+  ],
+  [
+    "lens cover",
+    "鏡頭蓋／鏡頭罩",
+    "🔍",
+    "/lenz ˈkʌvər/",
+    "The lens cover must not reduce image quality.",
+    "iot_ipcam"
+  ],
+  [
+    "lens holder",
+    "鏡頭座",
+    "🔭",
+    "/lenz ˈhoʊldər/",
+    "The lens holder keeps the optical axis stable.",
+    "iot_ipcam"
+  ],
+  [
+    "camera module",
+    "相機模組",
+    "📷",
+    "/ˈkæmərə ˈmɑːdʒuːl/",
+    "The camera module is mounted to the main housing.",
+    "iot_ipcam"
+  ],
+  [
+    "IR LED",
+    "紅外線 LED",
+    "🔴",
+    "/ˌaɪ ˈɑːr ˌɛl ˈiː ˈdiː/",
+    "The IR LEDs provide illumination at night.",
+    "iot_ipcam"
+  ],
+  [
+    "IR illuminator",
+    "紅外線照明器",
+    "🔴",
+    "/ˌaɪ ˈɑːr ɪˈluːməneɪtər/",
+    "The IR illuminator improves nighttime visibility.",
+    "iot_ipcam"
+  ],
+  [
+    "PIR sensor",
+    "人體紅外線感測器",
+    "🚶",
+    "/ˌpiː aɪ ˈɑːr ˈsensər/",
+    "The PIR sensor detects motion near the camera.",
+    "iot_ipcam"
+  ],
+  [
+    "microphone",
+    "麥克風",
+    "🎙️",
+    "/ˈmaɪkrəfoʊn/",
+    "The microphone is located near the front opening.",
+    "iot_ipcam"
+  ],
+  [
+    "speaker",
+    "喇叭",
+    "🔊",
+    "/ˈspiːkər/",
+    "The speaker opening must not be blocked by the housing.",
+    "iot_ipcam"
+  ],
+  [
+    "status LED",
+    "狀態指示燈",
+    "💡",
+    "/ˈsteɪtəs ˌɛl ˈiː ˈdiː/",
+    "The status LED indicates the camera's operating mode.",
+    "iot_ipcam"
+  ],
+  [
+    "mounting bracket",
+    "安裝支架",
+    "🔩",
+    "/ˈmaʊntɪŋ ˈbrækɪt/",
+    "The mounting bracket must withstand vibration.",
+    "iot_ipcam"
+  ],
+  [
+    "mounting hole",
+    "安裝孔",
+    "⭕",
+    "/ˈmaʊntɪŋ hoʊl/",
+    "The mounting holes must align with the bracket.",
+    "iot_ipcam"
+  ],
+  [
+    "snap fit",
+    "卡扣",
+    "🧩",
+    "/snæp fɪt/",
+    "The rear cover uses a snap fit to simplify assembly.",
+    "iot_ipcam"
+  ],
+  [
+    "press fit",
+    "壓入配合",
+    "🔧",
+    "/pres fɪt/",
+    "The insert is installed with a press fit.",
+    "iot_ipcam"
+  ],
+  [
+    "optical axis",
+    "光軸",
+    "🎯",
+    "/ˈɑːptɪkəl ˈæksɪs/",
+    "The lens must stay aligned with the optical axis.",
+    "iot_ipcam"
+  ],
+  [
+    "focus",
+    "對焦",
+    "🎯",
+    "/ˈfoʊkəs/",
+    "The lens position must be adjusted to achieve proper focus.",
+    "iot_ipcam"
+  ],
+  [
+    "focus adjustment",
+    "對焦調整",
+    "🔍",
+    "/ˈfoʊkəs əˈdʒʌstmənt/",
+    "The design needs a method for focus adjustment.",
+    "iot_ipcam"
+  ],
+  [
+    "field of view",
+    "視野／視角",
+    "👀",
+    "/fiːld əv vjuː/",
+    "A wider field of view covers more area.",
+    "iot_ipcam"
+  ],
+  [
+    "horizontal FOV",
+    "水平視角",
+    "↔️",
+    "/ˌhɔːrɪˈzɑːntəl ɛf oʊ ˈviː/",
+    "We need a horizontal FOV of more than 100 degrees.",
+    "iot_ipcam"
+  ],
+  [
+    "vertical FOV",
+    "垂直視角",
+    "↕️",
+    "/ˈvɜːrtɪkəl ɛf oʊ ˈviː/",
+    "The vertical FOV affects how much floor and ceiling are visible.",
+    "iot_ipcam"
+  ],
+  [
+    "diagonal FOV",
+    "對角視角",
+    "↗️",
+    "/daɪˈæɡənəl ɛf oʊ ˈviː/",
+    "The diagonal FOV is usually the largest FOV value.",
+    "iot_ipcam"
+  ],
+  [
+    "image quality",
+    "影像品質",
+    "🖼️",
+    "/ˈɪmɪdʒ ˈkwɑːləti/",
+    "Mechanical alignment can directly affect image quality.",
+    "iot_ipcam"
+  ],
+  [
+    "distortion",
+    "畸變",
+    "〰️",
+    "/dɪˈstɔːrʃən/",
+    "Wide-angle lenses usually have more distortion.",
+    "iot_ipcam"
+  ],
+  [
+    "optical distortion",
+    "光學畸變",
+    "〰️",
+    "/ˈɑːptɪkəl dɪˈstɔːrʃən/",
+    "We measured optical distortion at the image corners.",
+    "iot_ipcam"
+  ],
+  [
+    "MTF",
+    "調制傳遞函數",
+    "📈",
+    "/ˌɛm tiː ˈɛf/",
+    "MTF is used to evaluate lens and imaging performance.",
+    "iot_ipcam"
+  ],
+  [
+    "MTF50",
+    "MTF 50% 指標",
+    "📈",
+    "/ˌɛm tiː ɛf ˈfɪfti/",
+    "The MTF50 result is compared at the center and corners.",
+    "iot_ipcam"
+  ],
+  [
+    "vignetting",
+    "暗角",
+    "🌑",
+    "/vɪnˈjetɪŋ/",
+    "We observed vignetting near the image corners.",
+    "iot_ipcam"
+  ],
+  [
+    "lens flare",
+    "鏡頭耀光",
+    "✨",
+    "/lenz fler/",
+    "Lens flare can occur when the camera faces a bright light source.",
+    "iot_ipcam"
+  ],
+  [
+    "lens tilt",
+    "鏡頭傾斜",
+    "📐",
+    "/lenz tɪlt/",
+    "Lens tilt can cause uneven image sharpness.",
+    "iot_ipcam"
+  ],
+  [
+    "sensor tilt",
+    "感測器傾斜",
+    "📐",
+    "/ˈsensər tɪlt/",
+    "Sensor tilt may reduce image uniformity across the frame.",
+    "iot_ipcam"
+  ],
+  [
+    "thermal expansion",
+    "熱膨脹",
+    "🌡️",
+    "/ˈθɜːrməl ɪkˈspænʃən/",
+    "Thermal expansion can change the lens alignment.",
+    "iot_ipcam"
+  ],
+  [
+    "thermal contraction",
+    "熱收縮",
+    "❄️",
+    "/ˈθɜːrməl kənˈtrækʃən/",
+    "Thermal contraction can create a small gap between parts.",
+    "iot_ipcam"
+  ],
+  [
+    "temperature cycling",
+    "溫度循環",
+    "🌡️",
+    "/ˈtemprətʃər ˈsaɪklɪŋ/",
+    "We used temperature cycling to validate the camera design.",
+    "iot_ipcam"
+  ],
+  [
+    "thermal shock",
+    "熱衝擊",
+    "🌡️",
+    "/ˈθɜːrməl ʃɑːk/",
+    "The enclosure must survive thermal shock testing.",
+    "iot_ipcam"
+  ],
+  [
+    "heat spreader",
+    "導熱板／均熱板",
+    "🔥",
+    "/hiːt ˈspredər/",
+    "A heat spreader distributes heat away from the processor.",
+    "iot_ipcam"
+  ],
+  [
+    "condensation",
+    "凝結",
+    "💧",
+    "/ˌkɑːndenˈseɪʃən/",
+    "Condensation can form when warm humid air meets a cold surface.",
+    "iot_ipcam"
+  ],
+  [
+    "pressure equalization",
+    "壓力平衡",
+    "⚖️",
+    "/ˈpreʃər ˌiːkwələˈzeɪʃən/",
+    "The vent membrane provides pressure equalization inside the enclosure.",
+    "iot_ipcam"
+  ],
+  [
+    "waterproof",
+    "防水",
+    "💧",
+    "/ˈwɔːtərpruːf/",
+    "The camera needs to be waterproof for outdoor use.",
+    "iot_ipcam"
+  ],
+  [
+    "dustproof",
+    "防塵",
+    "🌪️",
+    "/ˈdʌstpruːf/",
+    "The enclosure is designed to be dustproof.",
+    "iot_ipcam"
+  ],
+  [
+    "ingress",
+    "進入／侵入",
+    "🚪",
+    "/ˈɪnɡres/",
+    "We need to prevent water ingress through the connector.",
+    "iot_ipcam"
+  ],
+  [
+    "seal",
+    "密封",
+    "🔒",
+    "/siːl/",
+    "The gasket creates a seal around the enclosure.",
+    "iot_ipcam"
+  ],
+  [
+    "connector opening",
+    "連接器開口",
+    "🔌",
+    "/kəˈnektər ˈoʊpənɪŋ/",
+    "The connector opening needs additional sealing.",
+    "iot_ipcam"
+  ],
+  [
+    "cable routing",
+    "線材走線",
+    "🔌",
+    "/ˈkeɪbəl ˈruːtɪŋ/",
+    "Cable routing must avoid interference with moving parts.",
+    "iot_ipcam"
+  ],
+  [
+    "strain relief",
+    "拉力緩衝／應力釋放",
+    "🔌",
+    "/streɪn rɪˈliːf/",
+    "The cable needs strain relief near the connector.",
+    "iot_ipcam"
+  ],
+  [
+    "assembly clearance",
+    "組裝間隙",
+    "📏",
+    "/əˈsembli ˈklɪrəns/",
+    "We need enough assembly clearance for the connector.",
+    "iot_ipcam"
+  ],
+  [
+    "serviceability",
+    "可維修性",
+    "🛠️",
+    "/ˌsɜːrvɪsəˈbɪləti/",
+    "The design should improve serviceability without increasing cost.",
+    "iot_ipcam"
+  ],
+  [
+    "assembly process",
+    "組裝流程",
+    "🔧",
+    "/əˈsembli ˈprɑːses/",
+    "We simplified the assembly process by reducing the screw count.",
+    "iot_ipcam"
+  ],
+  [
+    "screw count",
+    "螺絲數量",
+    "🔩",
+    "/skruː kaʊnt/",
+    "Reducing the screw count can improve assembly efficiency.",
+    "iot_ipcam"
+  ],
+  [
+    "part count",
+    "零件數量",
+    "🧩",
+    "/pɑːrt kaʊnt/",
+    "Reducing part count can lower assembly time and cost.",
+    "iot_ipcam"
+  ],
+  [
+    "design for assembly",
+    "可組裝性設計",
+    "🧩",
+    "/dɪˈzaɪn fər əˈsembli/",
+    "Design for assembly can reduce manufacturing time.",
+    "iot_ipcam"
+  ],
+  [
+    "design for manufacturability",
+    "可製造性設計",
+    "🏭",
+    "/dɪˈzaɪn fər ˌmænjəfæk.tʃərəˈbɪləti/",
+    "We reviewed the housing for design for manufacturability.",
+    "iot_ipcam"
+  ],
+  [
+    "EVT",
+    "工程驗證測試",
+    "🧪",
+    "/ˌiː viː ˈtiː/",
+    "The first prototypes were evaluated during EVT.",
+    "iot_ipcam"
+  ],
+  [
+    "DVT",
+    "設計驗證測試",
+    "🧪",
+    "/ˌdiː viː ˈtiː/",
+    "The design was validated during DVT.",
+    "iot_ipcam"
+  ],
+  [
+    "PVT",
+    "量產驗證測試",
+    "🏭",
+    "/ˌpiː viː ˈtiː/",
+    "The final process was verified during PVT.",
+    "iot_ipcam"
+  ],
+  [
+    "drop test",
+    "跌落測試",
+    "📦",
+    "/drɑːp test/",
+    "The enclosure must pass the drop test.",
+    "iot_ipcam"
+  ],
+  [
+    "vibration test",
+    "振動測試",
+    "〰️",
+    "/vaɪˈbreɪʃən test/",
+    "We performed a vibration test on the mounting bracket.",
+    "iot_ipcam"
+  ],
+  [
+    "shock test",
+    "衝擊測試",
+    "💥",
+    "/ʃɑːk test/",
+    "The camera passed the mechanical shock test.",
+    "iot_ipcam"
+  ],
+  [
+    "environmental test",
+    "環境測試",
+    "🌦️",
+    "/ɪnˌvaɪrənˈmentəl test/",
+    "Environmental testing includes humidity and temperature cycling.",
+    "iot_ipcam"
+  ],
+  [
+    "field test",
+    "實地測試",
+    "🌳",
+    "/fiːld test/",
+    "We found the issue during a field test.",
+    "iot_ipcam"
+  ],
+  [
+    "design validation",
+    "設計驗證",
+    "✓",
+    "/dɪˈzaɪn ˌvæləˈdeɪʃən/",
+    "Design validation confirmed the housing met the requirements.",
+    "iot_ipcam"
+  ],
+  [
+    "mechanical robustness",
+    "機構耐用性／強健性",
+    "💪",
+    "/məˈkænɪkəl roʊˈbʌstnəs/",
+    "The mounting design needs better mechanical robustness.",
+    "iot_ipcam"
+  ],
+  [
+    "cost reduction",
+    "降成本",
+    "💰",
+    "/kɔːst rɪˈdʌkʃən/",
+    "We achieved cost reduction by removing an unnecessary part.",
+    "iot_ipcam"
+  ],
+  [
+    "weight reduction",
+    "減重",
+    "⚖️",
+    "/weɪt rɪˈdʌkʃən/",
+    "The new housing provides weight reduction without sacrificing strength.",
+    "iot_ipcam"
+  ],
+  [
+    "noise reduction",
+    "降噪",
+    "🔇",
+    "/nɔɪz rɪˈdʌkʃən/",
+    "The enclosure design helped with noise reduction.",
+    "iot_ipcam"
+  ],
+  [
+    "image artifact",
+    "影像瑕疵／假象",
+    "🖼️",
+    "/ˈɪmɪdʒ ˈɑːrtɪfækt/",
+    "We investigated the image artifact and traced it to lens alignment.",
+    "iot_ipcam"
+  ],
+  [
+    "mechanical stack-up",
+    "機構公差堆疊",
+    "📏",
+    "/məˈkænɪkəl stæk ʌp/",
+    "We used mechanical stack-up analysis to control the lens position.",
+    "iot_ipcam"
+  ],
+  [
+    "lens-to-sensor distance",
+    "鏡頭到感測器距離",
+    "📏",
+    "/lenz tə ˈsensər ˈdɪstəns/",
+    "The lens-to-sensor distance must stay within tolerance.",
+    "iot_ipcam"
+  ],
+  [
+    "optical performance",
+    "光學性能",
+    "📈",
+    "/ˈɑːptɪkəl pərˈfɔːrməns/",
+    "Mechanical tolerances can affect optical performance.",
+    "iot_ipcam"
+  ],
+  [
+    "mechanical tolerance",
+    "機構公差",
+    "📏",
+    "/məˈkænɪkəl ˈtɑːlərəns/",
+    "We tightened the mechanical tolerance around the lens holder.",
+    "iot_ipcam"
+  ],
+  [
+    "gap",
+    "間隙",
+    "↔️",
+    "/ɡæp/",
+    "The thermal test created a small gap between the lens holder and bracket.",
+    "iot_ipcam"
+  ],
+  [
+    "flushness",
+    "齊平度",
+    "▭",
+    "/ˈflʌʃnəs/",
+    "We checked the flushness between the cover and housing.",
+    "iot_ipcam"
+  ],
+  [
+    "datum",
+    "基準",
+    "📐",
+    "/ˈdeɪtəm/",
+    "The datum controls the position of the mounting features.",
+    "iot_ipcam"
+  ],
+  [
+    "assembly fixture",
+    "組裝治具",
+    "🧰",
+    "/əˈsembli ˈfɪkstʃər/",
+    "The assembly fixture keeps the lens module in position.",
+    "iot_ipcam"
+  ],
+  [
+    "poka-yoke",
+    "防呆",
+    "🧩",
+    "/ˌpoʊkə ˈjoʊkeɪ/",
+    "We added poka-yoke features to prevent incorrect assembly.",
+    "iot_ipcam"
+  ],
+  [
+    "design review",
+    "設計審查",
+    "👥",
+    "/dɪˈzaɪn rɪˈvjuː/",
+    "We discussed the enclosure concept during the design review.",
+    "iot_ipcam"
+  ],
+  [
+    "supplier issue",
+    "供應商問題",
+    "🏭",
+    "/səˈplaɪər ˈɪʃuː/",
+    "We worked with the supplier to resolve the tooling issue.",
+    "iot_ipcam"
+  ],
+  [
+    "mass production",
+    "量產",
+    "🏭",
+    "/mæs prəˈdʌkʃən/",
+    "The design is ready for mass production.",
+    "iot_ipcam"
+  ],
+  [
+    "pilot run",
+    "試產",
+    "🏭",
+    "/ˈpaɪlət rʌn/",
+    "We found the assembly issue during the pilot run.",
+    "iot_ipcam"
+  ],
+  [
+    "yield improvement",
+    "良率改善",
+    "📈",
+    "/jiːld ɪmˈpruːvmənt/",
+    "The design change resulted in yield improvement.",
+    "iot_ipcam"
+  ],
+  [
+    "root cause analysis",
+    "根因分析",
+    "🔍",
+    "/ruːt kɔːz əˈnæləsɪs/",
+    "We performed root cause analysis on the image quality issue.",
+    "iot_ipcam"
+  ],
+  [
+    "failure mode",
+    "失效模式",
+    "⚠️",
+    "/ˈfeɪljər moʊd/",
+    "We identified the failure mode during reliability testing.",
+    "iot_ipcam"
+  ],
+  [
+    "reliability test",
+    "可靠度測試",
+    "🧪",
+    "/rɪˌlaɪəˈbɪləti test/",
+    "The product must pass reliability testing before mass production.",
+    "iot_ipcam"
+  ],
+  [
+    "requirement",
+    "需求／規格要求",
+    "📋",
+    "/rɪˈkwaɪərmənt/",
+    "The mechanical design must meet the IP rating requirement.",
+    "iot_ipcam"
+  ],
+  [
+    "design constraint",
+    "設計限制",
+    "🚧",
+    "/dɪˈzaɪn kənˈstreɪnt/",
+    "The sensor size is one of the main design constraints.",
+    "iot_ipcam"
+  ],
+  [
+    "design trade-off",
+    "設計取捨",
+    "⚖️",
+    "/dɪˈzaɪn treɪd ɔːf/",
+    "We made a design trade-off between size and thermal performance.",
+    "iot_ipcam"
+  ],
+  [
+    "prototype build",
+    "原型試作",
+    "🧪",
+    "/ˈproʊtətaɪp bɪld/",
+    "We tested the prototype build before the design freeze.",
+    "iot_ipcam"
+  ],
+  [
+    "design freeze",
+    "設計凍結",
+    "❄️",
+    "/dɪˈzaɪn friːz/",
+    "We completed the design freeze before tooling release.",
+    "iot_ipcam"
+  ],
+  [
+    "tooling release",
+    "開模／治具發包",
+    "🏭",
+    "/ˈtuːlɪŋ rɪˈliːs/",
+    "Tooling release was delayed because of the design change.",
+    "iot_ipcam"
+  ],
+  [
+    "engineering change",
+    "工程變更",
+    "✏️",
+    "/ˌendʒɪˈnɪərɪŋ tʃeɪndʒ/",
+    "The engineering change was reviewed before implementation.",
+    "iot_ipcam"
+  ],
+  [
+    "cost target",
+    "成本目標",
+    "🎯",
+    "/kɔːst ˈtɑːrɡɪt/",
+    "The new design needs to meet the cost target.",
+    "iot_ipcam"
+  ],
+  [
+    "space constraint",
+    "空間限制",
+    "📦",
+    "/speɪs kənˈstreɪnt/",
+    "The main challenge is the limited space inside the enclosure.",
+    "iot_ipcam"
+  ],
+  [
+    "mounting orientation",
+    "安裝方向",
+    "↕️",
+    "/ˈmaʊntɪŋ ˌɔːriənˈteɪʃən/",
+    "The mounting orientation affects cable routing and airflow.",
+    "iot_ipcam"
+  ],
+  [
+    "cable clearance",
+    "線材間隙",
+    "🔌",
+    "/ˈkeɪbəl ˈklɪrəns/",
+    "We need more cable clearance around the connector.",
+    "iot_ipcam"
+  ],
+  [
+    "lens locking",
+    "鏡頭固定",
+    "🔒",
+    "/lenz ˈlɑːkɪŋ/",
+    "The lens locking method must prevent rotation during vibration.",
+    "iot_ipcam"
+  ],
+  [
+    "thread locking",
+    "螺紋防鬆",
+    "🔩",
+    "/θred ˈlɑːkɪŋ/",
+    "We used thread locking to prevent the screw from loosening.",
+    "iot_ipcam"
+  ],
+  [
+    "screw loosening",
+    "螺絲鬆脫",
+    "🔩",
+    "/skruː ˈluːsənɪŋ/",
+    "Vibration can cause screw loosening over time.",
+    "iot_ipcam"
+  ],
+  [
+    "anti-rotation feature",
+    "防旋轉結構",
+    "🔒",
+    "/ˌænti roʊˈteɪʃən ˈfiːtʃər/",
+    "The anti-rotation feature prevents the lens holder from moving.",
+    "iot_ipcam"
+  ],
+  [
+    "water ingress",
+    "進水",
+    "💧",
+    "/ˈwɔːtər ˈɪnɡres/",
+    "The test showed water ingress around the gasket.",
+    "iot_ipcam"
+  ],
+  [
+    "dust ingress",
+    "進塵",
+    "🌪️",
+    "/dʌst ˈɪnɡres/",
+    "We inspected the enclosure for dust ingress after testing.",
+    "iot_ipcam"
+  ],
+  [
+    "lens contamination",
+    "鏡頭污染",
+    "🔍",
+    "/lenz kənˌtæməˈneɪʃən/",
+    "Lens contamination can reduce image quality.",
+    "iot_ipcam"
+  ],
+  [
+    "fingerprint contamination",
+    "指紋污染",
+    "👆",
+    "/ˈfɪŋɡərprɪnt kənˌtæməˈneɪʃən/",
+    "Fingerprint contamination on the lens cover can affect image quality.",
+    "iot_ipcam"
+  ],
+  [
+    "scratch resistance",
+    "抗刮性",
+    "🛡️",
+    "/skrætʃ rɪˈzɪstəns/",
+    "The lens cover needs good scratch resistance.",
+    "iot_ipcam"
+  ],
+  [
+    "UV resistance",
+    "抗紫外線",
+    "☀️",
+    "/ˌjuː ˈviː rɪˈzɪstəns/",
+    "The outdoor housing requires UV resistance.",
+    "iot_ipcam"
+  ],
+  [
+    "corrosion resistance",
+    "耐腐蝕性",
+    "🛡️",
+    "/kəˈroʊʒən rɪˈzɪstəns/",
+    "The metal bracket needs corrosion resistance for outdoor use.",
+    "iot_ipcam"
+  ],
+  [
+    "operating temperature",
+    "工作溫度",
+    "🌡️",
+    "/ˈɑːpəreɪtɪŋ ˈtemprətʃər/",
+    "The camera must operate across a wide temperature range.",
+    "iot_ipcam"
+  ],
+  [
+    "storage temperature",
+    "儲存溫度",
+    "📦",
+    "/ˈstɔːrɪdʒ ˈtemprətʃər/",
+    "We also need to define the storage temperature range.",
+    "iot_ipcam"
+  ],
+  [
+    "temperature range",
+    "溫度範圍",
+    "🌡️",
+    "/ˈtemprətʃər reɪndʒ/",
+    "The product must operate across the specified temperature range.",
+    "iot_ipcam"
+  ],
+  [
+    "acoustic opening",
+    "聲學開孔",
+    "🔊",
+    "/əˈkuːstɪk ˈoʊpənɪŋ/",
+    "The acoustic opening must allow sound to pass without compromising sealing.",
+    "iot_ipcam"
+  ],
+  [
+    "sound path",
+    "聲音路徑",
+    "🔊",
+    "/saʊnd pæθ/",
+    "The housing design needs a clear sound path to the microphone.",
+    "iot_ipcam"
+  ],
+  [
+    "air gap",
+    "空氣間隙",
+    "↔️",
+    "/er ɡæp/",
+    "The air gap affects the thermal resistance.",
+    "iot_ipcam"
+  ],
+  [
+    "fanless design",
+    "無風扇設計",
+    "🌀🚫",
+    "/ˈfæn.ləs dɪˈzaɪn/",
+    "The camera uses a fanless design for reliability and noise reduction.",
+    "iot_ipcam"
+  ],
+  [
+    "passive cooling",
+    "被動散熱",
+    "❄️",
+    "/ˈpæsɪv ˈkuːlɪŋ/",
+    "The enclosure relies on passive cooling.",
+    "iot_ipcam"
+  ],
+  [
+    "active cooling",
+    "主動散熱",
+    "🌀",
+    "/ˈæktɪv ˈkuːlɪŋ/",
+    "Active cooling may be needed if the processor temperature is too high.",
+    "iot_ipcam"
+  ],
+  [
+    "water repellency",
+    "防潑水性",
+    "💧",
+    "/ˈwɔːtər rɪˈpelənsi/",
+    "The coating improves water repellency on the lens cover.",
+    "iot_ipcam"
+  ],
+  [
+    "outdoor installation",
+    "戶外安裝",
+    "🏠",
+    "/ˈaʊtdɔːr ˌɪnstəˈleɪʃən/",
+    "The camera is designed for outdoor installation.",
+    "iot_ipcam"
+  ],
+  [
+    "indoor installation",
+    "室內安裝",
+    "🏠",
+    "/ˈɪndɔːr ˌɪnstəˈleɪʃən/",
+    "This model is intended for indoor installation.",
+    "iot_ipcam"
+  ],
+  [
+    "wall mount",
+    "壁掛",
+    "🧱",
+    "/wɔːl maʊnt/",
+    "The wall mount must support the camera weight.",
+    "iot_ipcam"
+  ],
+  [
+    "ceiling mount",
+    "天花板安裝",
+    "⬆️",
+    "/ˈsiːlɪŋ maʊnt/",
+    "The ceiling mount changes the camera's viewing direction.",
+    "iot_ipcam"
+  ],
+  [
+    "pan-tilt",
+    "水平／垂直轉動",
+    "↔️↕️",
+    "/pæn tɪlt/",
+    "The pan-tilt mechanism changes the camera viewing angle.",
+    "iot_ipcam"
+  ],
+  [
+    "mechanical stop",
+    "機械限位",
+    "🛑",
+    "/məˈkænɪkəl stɑːp/",
+    "The mechanical stop prevents over-rotation.",
+    "iot_ipcam"
+  ],
+  [
+    "rotation limit",
+    "旋轉限制",
+    "🔄",
+    "/roʊˈteɪʃən ˈlɪmɪt/",
+    "The rotation limit protects the cable from twisting.",
+    "iot_ipcam"
+  ],
+  [
+    "cable bend radius",
+    "線材彎曲半徑",
+    "〰️",
+    "/ˈkeɪbəl bend ˈreɪdiəs/",
+    "We need to maintain the minimum cable bend radius.",
+    "iot_ipcam"
+  ],
+  [
+    "connector retention",
+    "連接器保持力",
+    "🔌",
+    "/kəˈnektər rɪˈtenʃən/",
+    "Connector retention is important during vibration testing.",
+    "iot_ipcam"
+  ],
+  [
+    "waterproof connector",
+    "防水連接器",
+    "🔌",
+    "/ˈwɔːtərpruːf kəˈnektər/",
+    "The outdoor version uses a waterproof connector.",
+    "iot_ipcam"
+  ],
+  [
+    "design margin",
+    "設計裕量",
+    "📐",
+    "/dɪˈzaɪn ˈmɑːrdʒɪn/",
+    "We kept enough design margin for temperature variation.",
+    "iot_ipcam"
+  ],
+  [
+    "safety margin",
+    "安全裕量",
+    "🛡️",
+    "/ˈseɪfti ˈmɑːrdʒɪn/",
+    "The bracket has a sufficient safety margin.",
+    "iot_ipcam"
+  ],
+  [
+    "fit check",
+    "裝配確認",
+    "🔧",
+    "/fɪt tʃek/",
+    "We performed a fit check before releasing the drawing.",
+    "iot_ipcam"
+  ],
+  [
+    "functional test",
+    "功能測試",
+    "✓",
+    "/ˈfʌŋkʃənəl test/",
+    "The prototype passed the functional test.",
+    "iot_ipcam"
+  ],
+  [
+    "reliability validation",
+    "可靠度驗證",
+    "✓",
+    "/rɪˌlaɪəˈbɪləti ˌvæləˈdeɪʃən/",
+    "Reliability validation is required before mass production.",
+    "iot_ipcam"
+  ],
+  [
+    "design change",
+    "設計變更",
+    "✏️",
+    "/dɪˈzaɪn tʃeɪndʒ/",
+    "The design change improved assembly efficiency.",
+    "iot_ipcam"
+  ],
+  [
+    "design improvement",
+    "設計改善",
+    "✨",
+    "/dɪˈzaɪn ɪmˈpruːvmənt/",
+    "The design improvement reduced the number of screws.",
+    "iot_ipcam"
+  ],
+  [
+    "mechanical engineer",
+    "機構工程師",
+    "👷",
+    "/məˈkænɪkəl ˌendʒɪˈnɪr/",
+    "As a mechanical engineer, I focus on structure, thermal, and manufacturability.",
+    "iot_ipcam"
+  ],
+  [
+    "camera architecture",
+    "相機架構",
+    "📐",
+    "/ˈkæmərə ˈɑːrkɪtektʃər/",
+    "We reviewed the camera architecture before selecting the materials.",
+    "iot_ipcam"
+  ],
+  [
+    "system integration",
+    "系統整合",
+    "🔗",
+    "/ˈsɪstəm ˌɪntəˈɡreɪʃən/",
+    "Mechanical design must support system integration.",
+    "iot_ipcam"
+  ],
+  [
+    "customer requirement",
+    "客戶需求",
+    "📋",
+    "/ˈkʌstəmər rɪˈkwaɪərmənt/",
+    "We translated the customer requirement into mechanical specifications.",
+    "iot_ipcam"
+  ],
+  [
+    "technical issue",
+    "技術問題",
+    "⚠️",
+    "/ˈteknɪkəl ˈɪʃuː/",
+    "We discussed the technical issue with the supplier.",
+    "iot_ipcam"
+  ],
+  [
+    "design decision",
+    "設計決策",
+    "🧠",
+    "/dɪˈzaɪn dɪˈsɪʒən/",
+    "I made the design decision based on test data.",
+    "iot_ipcam"
+  ],
+  [
+    "test data",
+    "測試數據",
+    "📊",
+    "/test ˈdeɪtə/",
+    "We used the test data to validate the design.",
+    "iot_ipcam"
+  ],
+  [
+    "data-driven decision",
+    "數據驅動決策",
+    "📊",
+    "/ˈdeɪtə ˈdrɪvən dɪˈsɪʒən/",
+    "We made a data-driven decision after comparing the prototypes.",
+    "iot_ipcam"
+  ],
+  [
+    "I identified the root cause.",
+    "我找到了根本原因。",
+    "🔍",
+    "/aɪ aɪˈdentɪfaɪd ðə ruːt kɔːz/",
+    "I identified the root cause by comparing the thermal and dimensional data.",
+    "iot_ipcam"
+  ],
+  [
+    "I worked closely with the supplier.",
+    "我與供應商密切合作。",
+    "🤝",
+    "/aɪ wɜːrkt ˈkloʊsli wɪð ðə səˈplaɪər/",
+    "I worked closely with the supplier to improve the tooling process.",
+    "iot_ipcam"
+  ],
+  [
+    "We validated the design through testing.",
+    "我們透過測試驗證設計。",
+    "🧪",
+    "/wi ˈvælədeɪtɪd ðə dɪˈzaɪn θruː ˈtestɪŋ/",
+    "We validated the design through drop, vibration, and thermal testing.",
+    "iot_ipcam"
+  ],
+  [
+    "The main challenge was maintaining optical alignment.",
+    "最大的挑戰是維持光學對位。",
+    "🎯",
+    "/ðə meɪn ˈtʃælɪndʒ wəz meɪnˈteɪnɪŋ ˈɑːptɪkəl əˈlaɪnmənt/",
+    "The main challenge was maintaining optical alignment during temperature cycling.",
+    "iot_ipcam"
+  ],
+  [
+    "We reduced the part count without sacrificing strength.",
+    "我們降低零件數量，同時沒有犧牲強度。",
+    "💪",
+    "/wi rɪˈduːst ðə pɑːrt kaʊnt wɪˈðaʊt ˈsækrəfaɪsɪŋ streŋθ/",
+    "We reduced the part count without sacrificing strength or sealing performance.",
+    "iot_ipcam"
+  ],
+  [
+    "The design needs to meet the IP67 requirement.",
+    "設計需要符合 IP67 要求。",
+    "🛡️",
+    "/ðə dɪˈzaɪn niːdz tə miːt ði ˌaɪ ˌpiː ˈsɪks tiː ˈsevən rɪˈkwaɪərmənt/",
+    "The design needs to meet the IP67 requirement for outdoor use.",
+    "iot_ipcam"
+  ],
+  [
+    "We need to prevent the lens from moving.",
+    "我們需要防止鏡頭移動。",
+    "🔍",
+    "/wi niːd tə prɪˈvent ðə lenz frəm ˈmuːvɪŋ/",
+    "We need to prevent the lens from moving during vibration and shock.",
+    "iot_ipcam"
+  ],
+  [
+    "The gap can affect image quality.",
+    "間隙可能影響影像品質。",
+    "↔️",
+    "/ðə ɡæp kən əˈfekt ˈɪmɪdʒ ˈkwɑːləti/",
+    "The gap can affect image quality if the lens shifts relative to the sensor.",
+    "iot_ipcam"
+  ],
+  [
+    "I would start with a tolerance stack-up analysis.",
+    "我會先從公差堆疊分析開始。",
+    "📏",
+    "/aɪ wʊd stɑːrt wɪð ə ˈtɑːlərəns stæk ʌp əˈnæləsɪs/",
+    "I would start with a tolerance stack-up analysis to identify the main contributors.",
+    "iot_ipcam"
+  ],
+  [
+    "I would compare the thermal simulation with the test data.",
+    "我會把熱模擬與測試數據比較。",
+    "🌡️",
+    "/aɪ wʊd kəmˈper ðə ˈθɜːrməl ˌsɪmjəˈleɪʃən wɪð ðə test ˈdeɪtə/",
+    "I would compare the thermal simulation with the test data before changing the design.",
+    "iot_ipcam"
+  ],
+  [
+    "I would check the mechanical and optical interfaces first.",
+    "我會先檢查機構與光學介面。",
+    "🎯",
+    "/aɪ wʊd tʃek ðə məˈkænɪkəl ənd ˈɑːptɪkəl ˈɪntərfeɪsɪz fɜːrst/",
+    "I would check the mechanical and optical interfaces first if image quality is unstable.",
+    "iot_ipcam"
+  ],
+  [
+    "The issue was traced back to thermal expansion.",
+    "問題最後追溯到熱膨脹。",
+    "🌡️",
+    "/ði ˈɪʃuː wəz treɪst bæk tə ˈθɜːrməl ɪkˈspænʃən/",
+    "The issue was traced back to thermal expansion between the housing and lens holder.",
+    "iot_ipcam"
+  ],
+  [
+    "I would verify the design with a prototype before tooling.",
+    "我會在開模前用原型驗證設計。",
+    "🧪",
+    "/aɪ wʊd ˈverɪfaɪ ðə dɪˈzaɪn wɪð ə ˈproʊtətaɪp bɪˈfɔːr ˈtuːlɪŋ/",
+    "I would verify the design with a prototype before tooling to reduce risk.",
+    "iot_ipcam"
+  ],
+  [
+    "The design is optimized for assembly and manufacturability.",
+    "這個設計針對組裝與可製造性做了最佳化。",
+    "🏭",
+    "/ðə dɪˈzaɪn ɪz ˈɑːptəmaɪzd fər əˈsembli ənd ˌmænjəfæk.tʃərəˈbɪləti/",
+    "The design is optimized for assembly and manufacturability.",
+    "iot_ipcam"
+  ],
+  [
+    "We need to balance thermal performance, size, and cost.",
+    "我們需要平衡散熱、尺寸與成本。",
+    "⚖️",
+    "/wi niːd tə ˈbæləns ˈθɜːrməl pərˈfɔːrməns saɪz ənd kɔːst/",
+    "We need to balance thermal performance, size, and cost.",
+    "iot_ipcam"
+  ],
+  [
+    "The housing must protect the lens and sensor.",
+    "外殼必須保護鏡頭與感測器。",
+    "📦",
+    "/ðə ˈhaʊzɪŋ məst prəˈtekt ðə lenz ənd ˈsensər/",
+    "The housing must protect the lens and sensor from impact and contamination.",
+    "iot_ipcam"
+  ],
+  [
+    "I would involve the supplier early in the design phase.",
+    "我會在設計早期讓供應商參與。",
+    "🤝",
+    "/aɪ wʊd ɪnˈvɑːlv ðə səˈplaɪər ˈɜːrli ɪn ðə dɪˈzaɪn feɪz/",
+    "I would involve the supplier early in the design phase to de-risk tooling.",
+    "iot_ipcam"
+  ],
+  [
+    "We found the problem during the pilot run.",
+    "我們在試產時發現問題。",
+    "🏭",
+    "/wi faʊnd ðə ˈprɑːbləm ˈdʊrɪŋ ðə ˈpaɪlət rʌn/",
+    "We found the problem during the pilot run and implemented a corrective action.",
+    "iot_ipcam"
+  ],
+  [
+    "I would prioritize reliability and safety first.",
+    "我會優先考慮可靠度與安全性。",
+    "🛡️",
+    "/aɪ wʊd praɪˈɔːrətaɪz rɪˌlaɪəˈbɪləti ənd ˈseɪfti fɜːrst/",
+    "I would prioritize reliability and safety first, then optimize cost.",
+    "iot_ipcam"
+  ]
+];
+
+const EXPLAIN = {
+"convection":"對流：熱量由流體的流動傳遞。自然對流靠密度差形成循環；強制對流則使用風扇等方式推動氣流。",
+"conduction":"傳導：熱從高溫處沿固體材料傳到低溫處。IPCam 可以想成 IC → thermal pad → housing 的熱路徑。",
+"radiation":"輻射：物體以電磁波方式傳遞熱能，不需要依賴空氣或固體接觸。",
+"natural convection":"自然對流：沒有風扇，熱空氣上升、冷空氣下降，靠浮力形成循環。",
+"forced convection":"強制對流：利用風扇或鼓風機主動推動空氣，提高散熱能力。",
+"thermal conductivity":"導熱率：材料傳熱能力，常見單位 W/(m·K)。",
+"thermal resistance":"熱阻：熱傳遞的阻礙程度，常見單位 °C/W；熱阻越低通常越容易散熱。",
+"thermal paste":"導熱膏：填補兩個接觸面之間的微小空隙，降低接觸熱阻。",
+"heat sink":"散熱片：增加有效散熱面積，把元件熱量傳給周圍空氣。",
+"thermal path":"熱傳導路徑：熱從熱源一路傳到最終散熱環境的路徑。",
+"heat source":"發熱源：產生熱量的元件，例如 processor、sensor 或 power component。",
+"hot spot":"熱點：局部溫度明顯高於周圍的位置，通常是熱設計優先改善的區域。",
+"airflow":"氣流：空氣的流動方向、速度與流量；導風設計要讓氣流經過熱源與散熱片。",
+"interference":"干涉：兩零件的幾何空間發生重疊，可能造成無法裝配或運動卡住。",
+"interference fit":"過盈配合：軸與孔故意存在干涉量，組裝後靠彈性變形產生固定力。",
+"fit clearance":"配合間隙：兩個配合零件之間保留的空間，用來確保裝配或運動。",
+"tolerance stack-up":"公差堆疊：多個尺寸公差累積後，分析最終功能尺寸的變化範圍。",
+"undercut":"倒勾：零件特徵被直接脫模方向卡住，常需要 slider 或 angled pin。",
+"slider":"滑塊：模具側向機構，用來形成倒勾或側向特徵。",
+"angled pin":"斜銷：透過斜向運動帶動 slider，讓側向機構完成開模與復位。",
+"draft angle":"脫模角：讓塑膠件可以順利從模具退出的斜度。",
+"parting line":"分模線：Core 與 Cavity 接合處在塑膠件上形成的分模痕跡。",
+"wall thickness":"壁厚：塑膠件壁的厚度；均勻壁厚有助降低變形與成型問題。",
+"warpage":"翹曲：成型冷卻與收縮不均造成的變形。",
+"shrinkage":"收縮率：材料冷卻固化後尺寸相對於原始尺寸的縮小程度。",
+"gate location":"澆口位置：塑膠進入 cavity 的位置，會影響 filling、weld line 與 warpage。",
+"mold flow analysis":"模流分析：模擬塑膠充填、保壓、冷卻、翹曲等成型行為。",
+"mold":"模具：用來大量成型零件的工具，射出模具通常包含 Core、Cavity、slider 等。",
+"burr":"毛邊：加工或沖壓後邊緣留下的凸起，可能影響裝配與安全。",
+"rivet":"拉釘：用鉚釘形成永久機械連接，常用於薄板結構。",
+"countersunk hole":"沉頭孔：孔口做成斜面，使沉頭螺絲鎖入後頭部接近與表面齊平。",
+"torque":"扭力：旋轉螺絲時施加的力矩，常見單位 N·m 或 N·cm。",
+"clamping force":"夾緊力：夾具、螺絲或模具對零件施加的壓緊力量。",
+"optical alignment":"光學對位：讓 lens、sensor 等元件的光軸與機械基準正確對齊。",
+"field of view (fov)":"視角：鏡頭可以看到的角度範圍，常分 H-FOV、V-FOV、D-FOV。",
+"back focal length":"後焦距：鏡頭參考面到成像面的距離，是 lens 與 sensor placement 的重要尺寸。",
+"glare":"眩光：強光造成影像對比下降或局部過亮。",
+"ghosting":"鬼影：內部反射造成不應出現的亮斑或重影。",
+"vignette":"暗角：影像邊角亮度低於中心，廣角鏡頭較常見。",
+"refractive index":"折射率：描述光在材料中傳播與折射程度的光學參數。",
+"wavelength":"波長：波的週期性距離；不同波長對應不同光譜區域。",
+"airtightness test":"氣密測試：確認外殼密封能力，避免空氣或水氣從密封界面進入。",
+"o-ring":"O 型環：圓形彈性密封件，通常裝在 groove 中形成密封。",
+"gasket":"墊圈／密封條：位於接合面之間，靠壓縮填補微小間隙。",
+"moisture condensation":"水氣凝結：當表面溫度低於露點時，水蒸氣凝結成液態水。",
+"design for manufacturability (dfm)":"可製造性設計：設計早期就考慮製程、模具、裝配、良率、成本與量產風險。",
+"root cause":"根本原因：造成問題的真正來源，而不是表面現象。",
+"trade-off":"取捨：改善一項性能時可能犧牲另一項，例如 weight vs. strength。",
+"validate":"驗證：透過測試或證據確認設計是否符合需求。",
+"verify":"確認／驗證：確認規格、尺寸或條件是否正確。",
+"troubleshoot":"排除問題：從現象與量測逐步定位問題來源。",
+"iterate":"反覆修改／迭代：根據測試結果修改設計並再次驗證。",
+"evaluate":"評估：根據資料、測試或標準判斷設計表現。",
+"process capability (cpk)":"製程能力指數：評估製程平均值與規格界限之間的能力。",
+"rms (root mean square)":"均方根：將一組數值平方、平均、再開根號，常用於振動或誤差分析。"
+};
+
+const state={quiz:[],index:0,score:0,revealed:false,answered:false};
+
+function keyOf(s){return s.toLowerCase().trim();}
+function categoryName(c){return c==="thermal"?"熱／散熱":c==="optics"?"光學／IPCam":c==="manufacturing"?"製造／模具":c==="iot_ipcam"?"IoT／IPCam 機構":"面試高頻";}
+function getPool(){
+  const pool = WORDS.slice();
+  // Fisher-Yates shuffle：每次開始新一輪題庫時隨機排列一次。
+  for(let i=pool.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [pool[i],pool[j]]=[pool[j],pool[i]];
+  }
+  return pool;
+}
+function setStatus(text,kind=""){const el=document.getElementById("status");el.textContent=text;el.className="status "+kind;}
+function esc(s){return String(s).replace(/[&<>"]/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[ch]));}
+
+function drawDiagram(x){}
+
+function render(){
+ const x=state.quiz[state.index]||WORDS[0];
+ const reveal=state.revealed;
+ document.getElementById("progress").textContent=`題目 ${Math.min(state.index+1,state.quiz.length)} / ${state.quiz.length}`;
+ document.getElementById("categoryBadge").textContent=categoryName(x[6]);
+ document.getElementById("meaning").textContent=`「${x[1]}」`;
+ document.getElementById("phonetic").textContent=reveal ? x[3] : "完成作答後顯示";
+ document.getElementById("answerInput").value="";
+ document.getElementById("score").textContent=state.score;
+ document.getElementById("total").textContent=state.quiz.length;
+
+ const box=document.getElementById("resultBox");
+ if(reveal){
+   box.classList.remove("hidden");
+   document.getElementById("yourAnswer").textContent=state.lastAnswer||"（未作答）";
+   document.getElementById("correctEnglish").textContent=x[0];
+   document.getElementById("correctChinese").textContent=x[1];
+   document.getElementById("example").textContent="Example: "+x[4];
+   const title=document.getElementById("resultTitle");
+   title.className="result-title "+(state.lastCorrect?"ok":"bad");
+   title.textContent=state.lastCorrect?"✅ 正確！中英文對照完全一致":"❌ 不正確，請看下面的中英文對照";
+ }else{
+   box.classList.add("hidden");
+   document.getElementById("yourAnswer").textContent="—";
+   document.getElementById("correctEnglish").textContent="—";
+   document.getElementById("correctChinese").textContent="—";
+   document.getElementById("example").textContent="Example:";
+ }
+}
+
+function startQuiz(){
+ state.quiz=getPool().slice();
+ state.index=0;state.score=0;state.revealed=false;state.answered=false;state.lastAnswer="";state.lastCorrect=false;
+ render();
+ setStatus(`已隨機排列 ${state.quiz.length} 題。先聽第 1 題。`);
+}
+function nextQuestion(){
+ if(state.index>=state.quiz.length-1){
+   state.revealed=true;render();
+   setStatus(`🎉 題庫完成！你的成績是 ${state.score} / ${state.quiz.length}。`, "ok");
+   return;
+ }
+ state.index++;state.revealed=false;state.answered=false;state.lastAnswer="";state.lastCorrect=false;
+ render();
+ setStatus("下一題：先聽英文，再填空。");
+}
+function revealAnswer(){
+ state.revealed=true;state.answered=true;state.lastAnswer=document.getElementById("answerInput").value.trim();
+ state.lastCorrect=false;render();
+ setStatus("👁 已顯示正確英文、中文與發音。");
+}
+function playEnglish(rate=.82){
+ const x=state.quiz[state.index]||WORDS[0];
+ if(!("speechSynthesis" in window)){setStatus("此瀏覽器不支援英文語音播放。","bad");return;}
+ const u=new SpeechSynthesisUtterance(x[0]);u.lang="en-US";u.rate=rate;
+ window.speechSynthesis.cancel();window.speechSynthesis.speak(u);
+ setStatus(rate<.8?"🐢 正在慢速播放發音…":"🔊 正在播放英文…");
+}
+function speakEnglish(){playEnglish(.82)}
+function pronounceEnglish(){playEnglish(.62)}
+function checkAnswer(){
+ const x=state.quiz[state.index]||WORDS[0];
+ const raw=document.getElementById("answerInput").value.trim();
+ const input=keyOf(raw);
+ if(!input){setStatus("請先輸入英文答案。","bad");return;}
+ if(state.answered){setStatus("這題已經作答過，請按「下一題」。");return;}
+ state.answered=true;
+ state.lastAnswer=raw;
+ state.lastCorrect=input===keyOf(x[0]);
+ if(state.lastCorrect) state.score++;
+ state.revealed=true;
+ render();
+ setStatus(state.lastCorrect?"✅ 正確！":"❌ 不正確，請看中英文對照。",state.lastCorrect?"ok":"bad");
+}
+function speakPractice(){
+ const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(!SR){setStatus("此瀏覽器沒有語音辨識功能，請改用最新版 Chrome 或 Edge。","bad");return;}
+ const x=state.quiz[state.index]||WORDS[0];
+ if(state.answered){setStatus("這題已經作答過，請按「下一題」。");return;}
+ const r=new SR();r.lang="en-US";r.interimResults=false;r.maxAlternatives=3;
+ setStatus("🎤 請說出這個英文單字…");
+ r.onresult=e=>{
+   const heard=e.results[0][0].transcript.trim();
+   const h=keyOf(heard), target=keyOf(x[0]);
+   state.lastAnswer=heard;
+   state.lastCorrect=h===target||h.includes(target)||target.includes(h);
+   state.answered=true;
+   if(state.lastCorrect) state.score++;
+   state.revealed=true;
+   render();
+   setStatus(state.lastCorrect?"✅ 發音辨識正確！":"❌ 發音辨識未通過，請看正確答案。",state.lastCorrect?"ok":"bad");
+ };
+ r.onerror=e=>setStatus("語音辨識失敗："+e.error,"bad");
+ try{r.start();}catch(err){setStatus("語音辨識無法啟動，請確認瀏覽器允許麥克風。","bad");}
+}
+
+function renderList(){
+ const list=document.getElementById("wordList");
+ list.innerHTML="";
+ WORDS.forEach((x,i)=>{
+  const d=document.createElement("div");d.className="item";
+  d.innerHTML=`<b>${esc(x[2])} ${esc(x[0])}</b><span class="small">${esc(x[1])}｜${esc(categoryName(x[6]))}</span>`;
+  d.addEventListener("click",()=>{
+   const pool=getPool();const idx=pool.indexOf(x);
+   if(idx>=0){state.quiz=pool;state.index=idx;state.revealed=false;render();setStatus("已跳到這個單字。");}
+  });
+  list.appendChild(d);
+ });
+}
+
+document.getElementById("startBtn").addEventListener("click",startQuiz);
+document.getElementById("restartBtn").addEventListener("click",startQuiz);
+document.getElementById("categorySelect").addEventListener("change",startQuiz);
+document.getElementById("listenBtn").addEventListener("click",speakEnglish);
+document.getElementById("pronounceBtn").addEventListener("click",pronounceEnglish);
+document.getElementById("speakBtn").addEventListener("click",speakPractice);
+document.getElementById("answerBtn").addEventListener("click",revealAnswer);
+document.getElementById("nextBtn").addEventListener("click",nextQuestion);
+document.getElementById("checkBtn").addEventListener("click",checkAnswer);
+document.getElementById("answerInput").addEventListener("keydown",e=>{if(e.key==="Enter")checkAnswer();});
+
+renderList();
+startQuiz();
+</script>
+</body>
+</html>
